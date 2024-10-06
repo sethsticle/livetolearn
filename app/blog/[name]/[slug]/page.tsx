@@ -36,7 +36,10 @@ export default async function SlugRoute({ params }: { params: { name: string, sl
             {/* back button */}
             <div className="flex items-center gap-x-3 pt-10 pb-5 justify-between">
                 <BackButton path={`/blog/${params.name}`} text="Back to Blog" />
-                <ThemeToggle />
+                <div>
+                    
+                    <ThemeToggle />
+                </div>
             </div>
 
              

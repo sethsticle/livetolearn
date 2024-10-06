@@ -8,6 +8,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { BackButton } from "@/app/components/BackButton";
+import ShareButton from "@/app/components/dashboard/blog/ShareButton";
 
 
 //obtain the subdirectory from the params and fetch the data from the database
@@ -44,26 +45,44 @@ async function getData(subDir: string) {
 export default async function BlogRoute({ params }: { params: { name: string } }) {
     const data = await getData(params.name);
 
+
+    // Generate the correct base URL depending on the environment
+    const baseUrl =
+        typeof window !== 'undefined'
+            ? window.location.origin // If client-side
+            : process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000" // If server-side (for Vercel)
+
+    const fullUrl = `${baseUrl}/blog/${params.name}`;
+
+
     return (
         <>
             {/* header nav and toggle */}
-            
+
             <div className="flex items-center justify-between py-4  mb-4">
                 {/* Left: Back Button */}
-                <BackButton path={`/dashboard`} />
+                <div>
+                    <BackButton path={`/dashboard`} />
+                </div>
 
-                {/* Center: Logo and Blog Title */}
-                <nav className="flex items-center gap-x-4 justify-center">
-                    <Image src={Logo} alt="Logo" width={40} height={40} />
-                    <h1 className="text-3xl font-semibold tracking-tight">{data.name}</h1>
-                </nav>
+                <div>
+                    {/* Center: Logo and Blog Title */}
+                    <nav className="flex items-center gap-x-4 justify-center">
+                        <Image src={Logo} alt="Logo" width={40} height={40} />
+                        <h1 className="text-3xl font-semibold tracking-tight">{data.name}</h1>
+                    </nav>
+                </div>
 
-                {/* Right: Theme Toggle */}
-                <div className="flex justify-end">
-                    <ThemeToggle />
+                <div>
+                    {/* Right: Theme Toggle */}
+                    <div className="flex gap-2 justify-end">
+                        <ShareButton url={fullUrl} />
+                        <ThemeToggle />
+                    </div>
+
                 </div>
             </div>
-            
+
 
             {/* posts */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
