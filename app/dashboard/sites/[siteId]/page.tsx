@@ -96,7 +96,7 @@ async function SiteIdRoute({ params, }: { params: { siteId: string } }) {
                 // table displaying the posts made
                 (
                     <div>
-                        <Card>
+                        <Card className='min-w-[600px]'>
                             <CardHeader>
                                 <CardTitle className='text-2xl'>Posts</CardTitle>
                                 <CardDescription>Manage your posts in a simple and intuitive interface</CardDescription>
@@ -118,7 +118,7 @@ async function SiteIdRoute({ params, }: { params: { siteId: string } }) {
                                                 <TableCell>
                                                     <Image src={item.image} alt={item.title} className='size-16 rounded-md object-cover' width={64} height={64} />
                                                 </TableCell>
-                                                <TableCell>{item.title}</TableCell>
+                                                <TableCell >{item.title}</TableCell>
                                                 <TableCell><Badge className='bg-green-500/10 text-green-500' variant={'outline'}>Published</Badge></TableCell>
                                                 <TableCell>{item.createdAt.toDateString()}</TableCell>
                                                 <TableCell className="text-end">

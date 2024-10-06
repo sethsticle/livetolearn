@@ -47,10 +47,11 @@ export default async function BlogRoute({ params }: { params: { name: string } }
 
 
     // Generate the correct base URL depending on the environment
-    const baseUrl =
-        typeof window !== 'undefined'
-            ? window.location.origin // If client-side
-            : process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000" // If server-side (for Vercel)
+    const baseUrl = 'www.planetseth.xyz'
+
+        // typeof window !== 'undefined'
+        //     ? window.location.origin // If client-side
+        //     : process.env.NEXT_PUBLIC_VERCEL_URL || "http://localhost:3000" // If server-side (for Vercel)
 
     const fullUrl = `${baseUrl}/blog/${params.name}`;
 
