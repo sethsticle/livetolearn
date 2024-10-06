@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { JSONContent } from "novel";
 
 
 //fetch some post data to edit...we only need the postId as we are in the edit route
@@ -31,7 +32,10 @@ async function getData(postId: string) {
     
     //console.log('Fetched Data:', data); // Log the data being fetched
 
-    return data;
+    return {
+        ...data,
+        postContent: data?.postContent as JSONContent, // Casting the `JsonValue` to `JSONContent`
+      };
 }
 //we call the getData function and pass the postId as a param
 //postId is the name of the dynamic route param meaning we get the data from the url
