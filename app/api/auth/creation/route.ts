@@ -35,9 +35,13 @@ export async function GET() {
 
         // Redirect to dashboard after successful operation
         return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`);
-    } catch (error: any) {
-        // Handle any errors during the request
-        return NextResponse.json({ message: error.message || "Something went wrong." }, { status: 500 });
+    } catch (error: unknown) {  // Use unknown 
+        // Check if the error has a message property and handle it
+        if (error instanceof Error) {
+            return NextResponse.json({ message: error.message || "Something went wrong." }, { status: 500 });
+        }
+        // Fallback if it's not an instance of Error
+        return NextResponse.json({ message: "Something went wrong." }, { status: 500 });
     }
 }
 
