@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+
+
+model User {
+  id String @id @default(uuid()) // make sure id is a UUID for consistency
+  email String
+  firstName String 
+  lastName String
+  profileImage String
+
+  createdAt DateTime @default(now())
+
+  // 1 User <-> Many Sites (1:M relation)
+  sites Site[]   @relation("UserSites") 
+
+  // 1 User <-> Many Posts (1:M relation)
+  posts Post[]   @relation("UserPosts")
+
+  // Optional Subscription relation (1 User <-> 1 Subscription)
+  subscription Subscription?
+}
+
+model Site {
+  id String @id @default(uuid())
+  name String
+  description String
+  subdirectory String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  imageUrl String?
+
+  // Relation to User (Many Sites <-> 1 User)
+  user User? @relation(fields: [userId], references: [id], name: "UserSites")
+  userId String? // Foreign Key for User
+
+  // Relation to Posts (1 Site <-> Many Posts)
+  posts Post[]   @relation("SitePosts")
+
+ 
+}
+
+model Post {
+  id String @id @default(uuid())
+  title String
+  postContent Json
+  smallDescription String
+  image String 
+  slug String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+
+  // Relation to Site (Many Posts <-> 1 Site)
+  site Site? @relation(fields: [siteId], references: [id], name: "SitePosts", onDelete: Cascade)
+  siteId String? // Foreign Key for Site
+
+  // Relation to User (Many Posts <-> 1 User)
+  user User? @relation(fields: [userId], references: [id], name: "UserPosts")
+  userId String? // Foreign Key for User
+}
+
+model Subscription {
+  stripeSubscriptionId String @id @unique
+  interval String
+  status String
+  planId String
+  currentPeriodStart Int
+  currentPeriodEnd Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // 1 User <-> 1 Subscription
+  user User? @relation(fields: [userId], references: [id])
+  userId String? @unique
+}
+
+//relations: 
+//each site can have multiple posts
+//each post can have ONE site
+//each user can have multiple posts
+//each post can have ONE user
+// U: P -> 1: M
+//P: U -> M: 1
+//U: S -> 1 : M 
+
+// model User {
+//   id String @id @unique
+//   email String
+//   firstName String 
+//   lastName String
+//   profileImage String
+
+//   createdAt DateTime @default(now())
+
+//     // 1 User <-> Many Sites (1:M relation)
+//   Site         Site[]   @relation("UserSites") 
+
+//   // 1 User <-> Many Posts (optional, if needed)
+//   posts         Post[]   @relation("UserPosts") 
+// }
+
+// model Site {
+//   id String @id @default(uuid())
+//   name String
+//   description String
+//   subdirectory String @unique
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   imageUrl String?
+
+//   // Relation to User (Many Sites <-> 1 User)
+//   User          User?     @relation(fields: [userId], references: [id], name: "UserSites")
+//   userId        String?   //->-ForeignKey->-^^^^
+
+//   // Relation to Posts (1 Site <-> Many Posts)
+//   posts         Post[]   @relation("SitePosts")
+
+//   Subscription Subscription?
+// }
+
+// model Post {
+//   id String @id @default(uuid())
+
+//   title String
+//   postContent Json
+//   smallDescription String
+//   image String 
+//   slug String @unique
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @default(now())
+
+//   // Relation to Site (Many Posts <-> 1 Site)
+//   Site        Site? @relation(fields: [siteId], references: [id], name: "SitePosts", onDelete: Cascade)
+//   siteId      String? //->-ForeignKey->-^^^^
+
+//   // Relation to User (optional, if needed, depending on the use case)
+//   User        User? @relation(fields: [userId], references: [id], name: "UserPosts")
+//   userId      String? //->-ForeignKey-->-^^^
+// }
+// //if the site gets deleted we delete the posts related to it
+// //in order to remove the posts from the site, we need to remove the relationship...Cascade OnDelete
+
+// model Subscription {
+//   stripeSubscriptionId String   @id @unique
+//   interval             String
+//   status               String
+//   planId               String
+//   currentPeriodStart   Int
+//   currentPeriodEnd     Int
+//   createdAt            DateTime @default(now())
+//   updatedAt            DateTime @updatedAt
+
+//   User   User?   @relation(fields: [userId], references: [id])
+//   userId String? @unique
+// }
