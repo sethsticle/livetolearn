@@ -30,7 +30,7 @@ interface EditPostFormProps {
         title: string;
         slug: string;
         smallDescription: string;
-        postContent: any; //hehehe its actually JSONContent...naughty naughty
+        postContent: JSONContent; //hehehe its actually JSONContent...naughty naughty
         image: string;
     }
     siteId: string;
