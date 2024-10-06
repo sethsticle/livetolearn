@@ -1,8 +1,7 @@
 import prisma from '@/app/utils/db'
 import { Button } from '@/components/ui/button'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { BookIcon, MoreHorizontal, PlusCircle, SettingsIcon } from 'lucide-react'
-import { redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,17 +10,35 @@ import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { EmptyState } from '@/app/components/dashboard/EmptyState'
+import { requireUser } from '@/app/utils/requireUser'
 
 //  
 //  
 // we want to fetch the data from the post model related to the siteId and also the userId
 // we will get the user and site id through params and when called just passed as args
+
 async function getData(userId: string, siteId: string) {
     try {
+        // First, find the site to ensure it exists
+        const site = await prisma.site.findUnique({
+            where: {
+                id: siteId,
+            },
+            select: {
+                id: true, // We're just checking if the site exists
+            },
+        });
+
+        if (!site) {
+            // If the site is not found, throw notFound()
+            notFound(); // This will automatically trigger the Next.js 404 page
+        }
+
+        // Fetch related posts if the site exists
         const data = await prisma.post.findMany({
             where: {
                 userId,
-                siteId
+                siteId,
             },
             select: {
                 image: true,
@@ -31,30 +48,29 @@ async function getData(userId: string, siteId: string) {
                 site: {
                     select: {
                         subdirectory: true,
-                    }
-                }
+                    },
+                },
             },
-            orderBy: { createdAt: 'desc' }
+            orderBy: { createdAt: 'desc' },
         });
-        //console.log('Fetched Data:', data);
+
         return data;
     } catch (error) {
         console.error("Error fetching data:", error);
-        return [];
+        notFound(); // Also trigger 404 in case of any other errors
     }
 }
+
+
+
+
 
 //server component->safe for async
 //params of the siteId->relates to [siteId]
 async function SiteIdRoute({ params, }: { params: { siteId: string } }) {
 
     //////////////////////////////////////REPLACE WITH SERVER ACTION COMPONENT requireUser.ts////////////////////////////////////
-    const { getUser } = getKindeServerSession()
-    const user = await getUser()
-
-    if (!user) {
-        return redirect("api/auth/login");
-    }
+    const user = await requireUser()
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     //console.log('User ID:', user.id); // Check if user ID is correct
@@ -96,7 +112,7 @@ async function SiteIdRoute({ params, }: { params: { siteId: string } }) {
                 // table displaying the posts made
                 (
                     <div>
-                        <Card className='min-w-[600px]'>
+                        <Card className=''>
                             <CardHeader>
                                 <CardTitle className='text-2xl'>Posts</CardTitle>
                                 <CardDescription>Manage your posts in a simple and intuitive interface</CardDescription>
@@ -118,7 +134,7 @@ async function SiteIdRoute({ params, }: { params: { siteId: string } }) {
                                                 <TableCell>
                                                     <Image src={item.image} alt={item.title} className='size-16 rounded-md object-cover' width={64} height={64} />
                                                 </TableCell>
-                                                <TableCell >{item.title}</TableCell>
+                                                <TableCell className=''>{item.title}</TableCell>
                                                 <TableCell><Badge className='bg-green-500/10 text-green-500' variant={'outline'}>Published</Badge></TableCell>
                                                 <TableCell>{item.createdAt.toDateString()}</TableCell>
                                                 <TableCell className="text-end">

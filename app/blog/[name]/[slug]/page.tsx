@@ -7,10 +7,27 @@ import { notFound } from "next/navigation";
 import { JSONContent } from "novel";
 
 
-async function getData(slug: string) {
-    const data = await prisma.post.findUnique({
+async function getData(name: string, slug: string) {
+    // First, find the site by its subdirectory (name)
+    const site = await prisma.site.findUnique({
+        where: {
+            subdirectory: name,
+        },
+        select: {
+            id: true,
+        },
+    });
+
+    if (!site) {
+        // If the site is not found, return 404
+        return notFound();
+    }
+
+    // Then, find the post with the given slug that belongs to the site
+    const data = await prisma.post.findFirst({
         where: {
             slug: slug,
+            siteId: site.id,
         },
         select: {
             postContent: true,
@@ -22,14 +39,14 @@ async function getData(slug: string) {
     });
 
     if (!data) {
+        // If the post is not found, return 404
         return notFound();
     }
 
     return data;
 }
-
 export default async function SlugRoute({ params }: { params: { name: string, slug: string } }) {
-    const data = await getData(params.slug);
+    const data = await getData(params.name, params.slug);
 
     return (
         <>
