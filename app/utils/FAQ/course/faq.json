@@ -1,15 +1,15 @@
 [
     {
-      "question": "What is the duration of the course?",
-      "answer": "The course lasts for 6 months, with a flexible learning schedule."
+      "question": "How many hours per week should I expect to spend on the degree?",
+      "answer": "4 to 6 hours per week for year modules. 6 to 8 hours per week for semester modules." 
     },
     {
-      "question": "Are there any prerequisites for the course?",
-      "answer": "Yes, you should have basic knowledge of programming before enrolling."
+      "question": "Who can register?",
+      "answer": "Applicants (new applicants & Unisa students who applied for admission to a new qualification) may only register if they have received an offer of placement from Unisa and have accepted the offer online. Unisa reserves the right to not process and / or to cancel your registration if it is found that you were incorrectly admitted to a qualification. Re-registering students may register for the 2024 academic year once the registration period opens"
     },
     {
-      "question": "Is this course accredited?",
-      "answer": "Yes, the course is accredited by the relevant educational authority."
+      "question": "How many modules a year can I do?",
+      "answer": "You may not register for more than the allowed maximum number of credits / modules per academic year and / or semester: 60 credits per semester or 120 credits per academic year."
     }
   ]
   

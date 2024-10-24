@@ -5,7 +5,7 @@ import Vercel from "@/public/logos/vercel.svg";
 
 export function Logos() {
   return (
-    <div className="py-10">
+    <div className="py-10 hidden md:block">
       <h2 className="text-center text-lg font-semibold leading-7">
         Faciliated and supported by the best companies in the world
       </h2>

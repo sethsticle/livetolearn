@@ -18,7 +18,7 @@ export function Hero() {
                         <Image src={Logo} className="size-10" alt="Logo" />
 
                         <h4 className="text-3xl font-semibold">
-                            Planet<span className="text-primary">Seth</span>
+                           <span className="text-primary/90"> Live</span> to <span className="text-primary">Learn</span>
                         </h4>
                     </Link>
                     <div className="md:hidden">
@@ -41,23 +41,23 @@ export function Hero() {
                 <div className="relative items-center w-full py-12 lg:py-20">
                     <div className="text-center">
                         <span className="text-sm text-primary font-medium tracking-tight bg-primary/10 px-4 py-2 rounded-full">
-                            Ultimate Blogging SaaS for Startups
+                            Learning should be free, let&apos;s make it that way!
                         </span>
 
                         <h1 className="mt-8 text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-medium leading-none">
-                            Setup your Blog{" "}
-                            <span className="block text-primary">in Minutes!</span>
+                            The Ultimate Tool{" "}
+                            <span className="block text-primary">for Students!</span>
                         </h1>
 
-                        <p className="max-w-xl mx-auto mt-4 text-base font-light lg:text-lg text-muted-foreground tracking-tighter">
-                            Create your own blogs, manage your posts and even get paid for your work
+                        <p className="max-w-xl mx-auto mt-4 text-base font-light lg:text-lg text-muted-foreground tracking-tight">
+                            Find useful resources, create and share your own for others to learn from!
                         </p>
                         <div className="flex items-center gap-x-5 w-full justify-center mt-5 ">
                             <LoginLink>
                                 <Button variant="secondary">Sign in</Button>
                             </LoginLink>
                             <RegisterLink>
-                                <Button>Try for free</Button>
+                                <Button>Sign Up</Button>
                             </RegisterLink>
                         </div>
                     </div>

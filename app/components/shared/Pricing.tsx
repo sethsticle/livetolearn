@@ -17,7 +17,7 @@ interface pricingPlanProps {
 export const PricingPlans: pricingPlanProps[] = [
     {
         id: 0,
-        cardTitle: "Nigga",
+        cardTitle: "Free",
         cardDescription: "The best pricing plan for people starting out.",
         benefits: [
             "1 Site",

@@ -19,6 +19,13 @@ async function getData(courseId: string) {
   const course = await prisma.course.findUnique({
     where: { id: courseId },
     include: { module: true }, // Include related modules
+  //   where: { id: courseId },
+  //   include: {
+  //     module: {
+  //       orderBy: { year: 'asc' }, // Order modules by year
+  //     },
+  //   }, 
+  // });
   });
   return course;
 }
@@ -104,7 +111,7 @@ async function CourseIdRoute({ params }: { params: { courseId: string } }) {
 
 
         <div className="w-full px-8">
-          <h2>Rules</h2>
+          <h2 className='text-primary font-bold text-lg'>Requirements</h2>
           <ul className="list-disc list-inside">
             <li>Must have daily access to a computer with a stable internet connection.</li>
             <li>Must have passed Computer Application Technology or Information Technology with a rating of 4 (new NSC) or passed Computer Studies (old Senior Certificate).</li>
@@ -115,7 +122,7 @@ async function CourseIdRoute({ params }: { params: { courseId: string } }) {
         </div>
 
         <div className="w-full px-8">
-          <h2>Purpose Statement</h2>
+          <h2 className='text-primary font-bold text-lg'>Purpose Statement</h2>
           <ul className="list-disc list-inside">
             <li>Develop a systematic and coherent body of knowledge in computing.</li>
             <li>Understand and apply computing concepts and principles in the workplace.</li>
@@ -125,22 +132,13 @@ async function CourseIdRoute({ params }: { params: { courseId: string } }) {
             <li>Gain personal intellectual growth and contribute to science and technology in society.</li>
           </ul>
         </div>
-        <div className="w-full px-8">
-          <h2>Purpose Statement</h2>
-          <ul className="list-disc list-inside">
-            <li>Develop a systematic and coherent body of knowledge in computing.</li>
-            <li>Understand and apply computing concepts and principles in the workplace.</li>
-            <li>Gain strong cognitive, problem-solving, and communication skills.</li>
-            <li>Build competence in accessing and evaluating scientific information.</li>
-            <li>Apply knowledge through basic research and practice.</li>
-            <li>Gain personal intellectual growth and contribute to science and technology in society.</li>
-          </ul>
-        </div>
+    
+
 
 
 
         {/* List of Modules */}
-        <div className="flex flex-col w-1/2 border rounded-lg bg-muted/40 shadow-lg">
+        <div className="flex flex-col w-full md:w-3/4 lg:w-1/2 border rounded-lg bg-muted/40 shadow-lg px-2">
 
           {/* Display modules */}
           <Table className='w-full'>
@@ -190,7 +188,7 @@ async function EditCourseButton({ courseId }: { courseId: string }) {
 
   if (admin) {
     return (
-      <div className="mt-4">
+      <div className=" ">
         <Button asChild>
           <Link href={`/dashboard/new/editcourse/${courseId}`}>Edit Course</Link>
         </Button>

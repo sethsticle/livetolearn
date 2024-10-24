@@ -28,6 +28,7 @@ enum ResourceType {
   YOUTUBE_LINK
 }
 
+
 model User {
   id           String @id @default(uuid()) // make sure id is a UUID for consistency
   email        String
@@ -123,7 +124,7 @@ model Module {
   slug        String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
+  // year        Int
   // Relation to Course (Many Courses <-> 1 Module)
   course   Course @relation(fields: [courseId], references: [id], name: "CourseModule")
   courseId String // Foreign Key for Course

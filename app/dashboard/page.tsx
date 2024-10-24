@@ -79,7 +79,7 @@ async function DashboardContent({ userId }: { userId: string }) {
   const { posts, sites, courses } = data;
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 ">
       <div className="flex flex-row w-full justify-between">
         <h1 className="text-2xl font-semibold mb-5">Available Courses</h1>
         <AddCourseButton />

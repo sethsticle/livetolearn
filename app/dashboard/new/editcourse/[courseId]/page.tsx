@@ -29,8 +29,8 @@ async function EditCourseRoute({ params }: { params: { courseId: string } }) {
             </header>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 h-full w-full  items-center p-2'>
                 <div className=' col-span-2'><EditCourseForm courseData={courseData} courseId={params.courseId} /></div>
-                <div className=' h-full'><ModuleCardDisplay courseData={courseData} /></div>
-
+                <div className=''><ModuleCardDisplay courseData={courseData} /></div>
+                {/* <div></div>edit faqs here */}
             </div>
 
             

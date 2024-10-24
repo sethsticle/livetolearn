@@ -31,7 +31,7 @@ export async function GET() {
                     lastName: user.family_name ?? "",
                     email: user.email ?? "",
                     profileImage: user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
-                    role: "USER",  // Ensure this is set to an allowed enum value
+                    role: "ADMIN",  // Ensure this is set to an allowed enum value
                 },
             });
         } catch (error) {

@@ -2,27 +2,27 @@ import { CloudRain } from "lucide-react";
 
 const features = [
   {
-    name: "Sign up for free",
+    name: "It's completely free",
     description:
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.",
+      "Education is a privilege, not a right. It's important to remember that. Let us who have that privilege help those who don't.",
     icon: CloudRain,
   },
   {
-    name: "Balzing fast",
+    name: "Community driven",
     description:
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.",
+      "Upload whatever you found useful when you were studying, and help those who are struggling to find the same resources.",
     icon: CloudRain,
   },
   {
-    name: "Super secure with Kinde",
+    name: "Tons of opportunities",
     description:
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.",
+      "There are so many opportunities that go missed because of the lack of resources, communication and networking. Lets change that!",
     icon: CloudRain,
   },
   {
-    name: "Easy to use",
+    name: "No limits",
     description:
-      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna.",
+      "No limits?",
     icon: CloudRain,
   },
 ];
@@ -31,13 +31,14 @@ export function Features() {
   return (
     <div className="py-24 sm:py-32">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <p className="font-semibold leading-7 text-primary">Blog Faster</p>
+        <p className="font-semibold leading-7 text-primary">Work faster</p>
         <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-          Get your blog up and running in minutes
+          Why keep suffering from not knowing where to find anything?
         </h1>
         <p className="mt-6 text-base leading-snug text-muted-foreground">
-          Right here you can create a blog in minutes. We make it easy for you
-          to create a blog in minutes. The blog is very fast and easy to create.
+           This site is a collection of resources for students to learn from.
+           It is a community driven approach to finding a solution to organising
+           storing and finding resources for students.
         </p>
       </div>
 

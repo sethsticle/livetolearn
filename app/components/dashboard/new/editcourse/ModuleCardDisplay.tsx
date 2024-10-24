@@ -3,7 +3,7 @@ import { DeleteModuleAction } from '@/app/actions';
 import { Course, Module } from '@/app/utils/types'
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Edit, Trash } from 'lucide-react';
+import { Trash } from 'lucide-react';
 import React, { useState } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
@@ -31,17 +31,17 @@ export default function ModuleCardDisplay({ courseData }: { courseData: Course }
                 <div className="">
 
                     {modules.map((mod) => (
-                        <div key={mod.id} className=''>
+                        <div key={mod.id} className='my-2'>
                             <Card className="p-4 flex justify-between max-h-[120px] overflow-hidden w-full">
                                 <div>
                                     <h3 className="font-semibold">{mod.name}</h3>
                                     <p>{mod.description}</p>
                                 </div>
                                 <div className="flex gap-2">
-                                    {/* Edit Module Icon */}
-                                    <Button variant="ghost">
-                                        <Edit className="w-5 h-5" />
-                                    </Button>
+                                    {/* Edit Module Icon
+                                    <Button variant="ghost" asChild>
+                                        <Link href={`/dashboard/new/editcourse/${courseId}/editmodule/[slug]/page.tsx`}></Link><Edit className="w-5 h-5" />
+                                    </Button> */}
                                     {/* Delete Module Icon */}
                                     <Button variant="ghost" onClick={() => setDeleteModuleId(mod.id)}>
                                         <Trash className="w-5 h-5 text-red-500" />
