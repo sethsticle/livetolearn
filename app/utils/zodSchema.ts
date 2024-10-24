@@ -171,15 +171,15 @@ export function CourseEditSchema() {
   export function resourceSchema() {
     return z.object({
       name: z.string().min(1, "Resource name is required."),
-      link: z.string()
-        .url("Invalid URL format.")
-        .refine(link => {
-          const googleDriveFilePattern = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view\?usp=sharing/;
-          const googleDriveFolderPattern = /https:\/\/drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]+)/;
-          const youtubePattern = /https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/;
+      link: z.string().min(1, "Resource link is required."),
+        // .url("Invalid URL format.")
+        // .refine(link => {
+        //   const googleDriveFilePattern = /https:\/\/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)\/view\?usp=sharing/;
+        //   const googleDriveFolderPattern = /https:\/\/drive\.google\.com\/drive\/folders\/([a-zA-Z0-9_-]+)/;
+        //   const youtubePattern = /https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/;
           
-          return googleDriveFilePattern.test(link) || googleDriveFolderPattern.test(link) || youtubePattern.test(link);
-        }, "Must be a valid Google Drive (File or Folder) or YouTube link."),
+        //   return googleDriveFilePattern.test(link) || googleDriveFolderPattern.test(link) || youtubePattern.test(link);
+        // }, "Must be a valid Google Drive (File or Folder) or YouTube link."),
       type: z.enum(["TEXTBOOK", "TUTORIAL_LETTER", "ADDITIONAL_RESOURCE", "YOUTUBE_LINK"]),
       description: z.string().optional()
     });

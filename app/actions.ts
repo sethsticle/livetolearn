@@ -229,7 +229,7 @@ export async function AddResourceAction(_prevState: unknown, formData: FormData)
   console.log("CourseId from server action: ", courseId);
 
   // Ensure moduleSlug and conceptId are present
-  if (!moduleSlug || !conceptId) {
+  if (!moduleSlug ) {
     throw new Error("Missing moduleSlug or conceptId");
   }
 
@@ -247,13 +247,13 @@ export async function AddResourceAction(_prevState: unknown, formData: FormData)
     console.log("Module with the given slug does not exist.");
   }
 
-  const conceptExists = await prisma.concept.findUnique({
-    where: { id: conceptId },
-  });
+  // const conceptExists = await prisma.concept.findUnique({
+  //   where: { id: conceptId },
+  // });
 
-  if (!conceptExists) {
-    throw new Error("Concept with the given ID does not exist.");
-  }
+  // if (!conceptExists) {
+  //   throw new Error("Concept with the given ID does not exist.");
+  // }
 
   // Check if the resource already exists by its slug (assuming slug = link)
   const existingResource = await prisma.resource.findUnique({
@@ -274,7 +274,7 @@ export async function AddResourceAction(_prevState: unknown, formData: FormData)
       type: submission.value.type,
       moduleId: moduleExists.id,
       userId: user.id,
-      conceptId: conceptExists.id || null, // Store the selected conceptId
+      conceptId: conceptId || null, // Store the selected conceptId
     },
   });
   

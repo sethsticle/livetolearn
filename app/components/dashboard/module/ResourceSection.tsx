@@ -2,7 +2,7 @@ import { Resource } from "@/app/utils/types";
 
 export const ResourceSection = ({ title, resources }: { title: string, resources: Resource[] }) => {
     const groupedByConcept = resources.reduce<Record<string, Resource[]>>((acc, resource) => {
-        const conceptName = resource.concept?.name || 'No Concept';
+        const conceptName = resource.concept?.name || ' ';
         if (!acc[conceptName]) {
             acc[conceptName] = [];
         }
