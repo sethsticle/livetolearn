@@ -9,85 +9,163 @@ generator client {
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
-  directUrl         = env("DIRECT_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
+//Database needs a UNISALink to each course and each module
 
+enum Role {
+  ADMIN
+  USER
+}
+
+enum ResourceType {
+  TEXTBOOK
+  TUTORIAL_LETTER
+  ADDITIONAL_RESOURCE
+  YOUTUBE_LINK
+}
 
 model User {
-  id String @id @default(uuid()) // make sure id is a UUID for consistency
-  email String
-  firstName String 
-  lastName String
+  id           String @id @default(uuid()) // make sure id is a UUID for consistency
+  email        String
+  firstName    String
+  lastName     String
   profileImage String
+  role         Role
 
   createdAt DateTime @default(now())
 
   // 1 User <-> Many Sites (1:M relation)
-  sites Site[]   @relation("UserSites") 
+  sites Site[] @relation("UserSites")
 
   // 1 User <-> Many Posts (1:M relation)
-  posts Post[]   @relation("UserPosts")
+  posts Post[] @relation("UserPosts")
 
   // Optional Subscription relation (1 User <-> 1 Subscription)
   subscription Subscription?
+
+  // 1 User <-> Many Resources (1:M relation)
+  resources Resource[] @relation("UserResource")
 }
 
 model Site {
-  id String @id @default(uuid())
-  name String
-  description String
-  subdirectory String @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  subdirectory String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   imageUrl String?
 
   // Relation to User (Many Sites <-> 1 User)
-  user User? @relation(fields: [userId], references: [id], name: "UserSites")
+  user   User?   @relation(fields: [userId], references: [id], name: "UserSites")
   userId String? // Foreign Key for User
 
   // Relation to Posts (1 Site <-> Many Posts)
-  posts Post[]   @relation("SitePosts")
-
- 
+  posts Post[] @relation("SitePosts")
 }
 
 model Post {
-  id String @id @default(uuid())
-  title String
-  postContent Json
+  id               String @id @default(uuid())
+  title            String
+  postContent      Json
   smallDescription String
-  image String 
-  slug String @unique
+  image            String
+  slug             String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 
   // Relation to Site (Many Posts <-> 1 Site)
-  site Site? @relation(fields: [siteId], references: [id], name: "SitePosts", onDelete: Cascade)
+  site   Site?   @relation(fields: [siteId], references: [id], name: "SitePosts", onDelete: Cascade)
   siteId String? // Foreign Key for Site
 
   // Relation to User (Many Posts <-> 1 User)
-  user User? @relation(fields: [userId], references: [id], name: "UserPosts")
+  user   User?   @relation(fields: [userId], references: [id], name: "UserPosts")
   userId String? // Foreign Key for User
 }
 
 model Subscription {
-  stripeSubscriptionId String @id @unique
-  interval String
-  status String
-  planId String
-  currentPeriodStart Int
-  currentPeriodEnd Int
+  stripeSubscriptionId String   @id @unique
+  interval             String
+  status               String
+  planId               String
+  currentPeriodStart   Int
+  currentPeriodEnd     Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // 1 User <-> 1 Subscription
+  user   User?   @relation(fields: [userId], references: [id])
+  userId String? @unique
+}
+
+model Course {
+  id           String   @id @default(uuid())
+  name         String
+  description  String
+  subdirectory String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  degreeCode   String
+  // Relation to Module (Many Modules <-> 1 Course)
+  module       Module[] @relation("CourseModule")
+}
+
+model Module {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  slug        String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation to Course (Many Courses <-> 1 Module)
+  course   Course @relation(fields: [courseId], references: [id], name: "CourseModule")
+  courseId String // Foreign Key for Course
+
+  // Relation to Resource (Many Resources <-> 1 Module)
+  resource Resource[] @relation("ModuleResource")
+
+  // Relation to Concepts (Many Concepts <-> 1 Module)
+  concept Concept[] @relation("ModuleConcept")
+}
+
+model Resource {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  slug        String       @unique
+  type        ResourceType
+  upVotes   Int      @default(0)
+  downVotes Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // 1 User <-> 1 Subscription
-  user User? @relation(fields: [userId], references: [id])
-  userId String? @unique
+  // Relation to Module (Many Modules <-> 1 Resource)
+  module    Module?  @relation(fields: [moduleId], references: [id], name: "ModuleResource")
+  moduleId  String? // Foreign Key for Module
+
+  // Relation to User (Many Users <-> 1 Resource)
+  user   User   @relation(fields: [userId], references: [id], name: "UserResource")
+  userId String // Foreign Key for User
+
+  // Relation to Concept (Many Resources <-> 1 Concept)
+  concept     Concept?     @relation(fields: [conceptId], references: [id], name: "ResourceConcept")
+  conceptId   String?      // Foreign Key for Concept
+}
+
+model Concept {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade, name: "ModuleConcept")
+  moduleId    String   // Foreign Key to Module
+  resources   Resource[] @relation("ResourceConcept")
 }
 
 //relations: 

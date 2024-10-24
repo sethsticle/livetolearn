@@ -15,16 +15,16 @@ export const navLinks = [
         href: "/dashboard",
         icon: Home,
     },
-    {
-        name: "Sites",
-        href: "/dashboard/sites",
-        icon: Globe,
-    },
-    {
-        name: "Pricing",
-        href: "/dashboard/pricing",
-        icon: DollarSign,
-    },
+    // {
+    //     name: "Courses",
+    //     href: "/dashboard/courses",
+    //     icon: Globe,
+    // },
+    // {
+    //     name: "Modules",
+    //     href: "/dashboard/modules",
+    //     icon: DollarSign,
+    // },
 ];
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
@@ -32,12 +32,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
         <section className='grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]'>
             <div className='hidden border-r bg-muted/40 md:block '>  {/*on small screens we dont show */}
-                <div className='flex h-full max-h-screen flex-col gap-2'>
+                <div className='flex h-full max-h-screen flex-col gap-2 fixed  '>
 
-                    <div className='flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-2 overflow-hidden text-nowrap'>
+                    <div className='flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-2 overflow-hidden text-nowrap  '>
                         <Image src={'/2.png'} alt='logo' width={32} height={32} />
                         <Link href='/'>
-                            <h3 className='text-3xl'>Planet <span className='text-primary'>Seth</span></h3>
+                            <h3 className='text-3xl'> <span className='text-primary'>Live</span> to <span className='text-primary'>Learn</span></h3>
                         </Link>
                     </div>
 
@@ -53,7 +53,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
 
 
             <div className='flex flex-col'>
-                <header className='flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6'>
+                <header className='sticky top-0 flex h-14 items-center gap-4 border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6'>
                     <div className='md:hidden '>
                         <NavbarMenu />
                     </div>

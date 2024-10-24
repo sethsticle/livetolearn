@@ -7,6 +7,7 @@ export async function GET() {
     try {
         const { getUser } = getKindeServerSession();
         const user = await getUser(); // Fetch the user session
+        console.log("user in GET: ", user)
 
         // Ensure user exists, otherwise throw an error
         if (!user || !user.id) {
@@ -21,7 +22,8 @@ export async function GET() {
         });
 
         // If user doesn't exist in DB, create a new one
-        if (!dbUser) {
+        if(!dbUser){
+        try {
             dbUser = await prisma.user.create({
                 data: {
                     id: user.id,
@@ -29,10 +31,15 @@ export async function GET() {
                     lastName: user.family_name ?? "",
                     email: user.email ?? "",
                     profileImage: user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
+                    role: "USER",  // Ensure this is set to an allowed enum value
                 },
             });
+        } catch (error) {
+            console.error("Error creating user:", error);  // Log the error for debugging
+            return NextResponse.json({ message: "Error creating user." }, { status: 500 });
         }
-
+    
+    }
         // Redirect to dashboard after successful operation
         return NextResponse.redirect(`${process.env.NEXT_PUBLIC_SITE_URL}/dashboard`);
     } catch (error: unknown) {  // Use unknown 

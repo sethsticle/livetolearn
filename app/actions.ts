@@ -1,9 +1,12 @@
 "use server" //due to line 6 CRUCIAL
 import { redirect } from "next/navigation";
 import { parseWithZod } from '@conform-to/zod'
-import { PostSchema, SiteCreationSchema } from "./utils/zodSchema";
+import { conceptSchema, CourseCreationSchema, CourseEditSchema, ModuleCreationSchema, moduleSchema, PostSchema, resourceSchema, SiteCreationSchema } from "./utils/zodSchema";
 import prisma from "./utils/db"; //CRUCIAL ERROR DONT FORGET
 import { requireUser } from "./utils/requireUser";
+import { requireAdmin } from "./utils/requireAdmin";
+import CourseCreationRoute from "./dashboard/new/newcourse/page";
+import { SubmissionResult } from "@conform-to/react";
 
 export async function CreateSiteAction(_prevState: unknown, formData: FormData) {
     const user = await requireUser();
@@ -92,6 +95,233 @@ export async function CreateSiteAction(_prevState: unknown, formData: FormData) 
     }
 }
 
+export async function CreateCourseAction(_prevState: unknown, formData: FormData) {
+  const user = await requireAdmin();
+
+  
+      // Allow creating a site
+      const submission = await parseWithZod(formData, {
+        schema: CourseCreationSchema({
+          async isSubdirectoryUnique() {
+            const existingSubDirectory = await prisma.course.findUnique({
+              where: {
+                subdirectory: formData.get("subdirectory") as string,
+              },
+            });
+            return !existingSubDirectory;  // Return true if unique, false otherwise
+          },
+        }),
+        async: true,
+      });
+
+      if (submission.status !== "success") {
+        return submission.reply();
+      }
+
+       await prisma.course.create({
+        data: {
+          description: submission.value.description,
+          name: submission.value.name,
+          subdirectory: submission.value.subdirectory,
+          degreeCode: submission.value.degreeCode,
+        },
+      });
+
+      
+    //console.log('Response:', response);
+    return redirect("/dashboard");
+  
+}
+
+export async function EditCourseAction(_prevState: unknown, formData: FormData) {
+  // Validate the course form
+  const submission = await parseWithZod(formData, {
+    schema: CourseEditSchema(),
+    async: true,
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  // Update the course data
+  const course = await prisma.course.update({
+    where: { id: formData.get('courseId') as string },
+    data: {
+      name: submission.value.name,
+      description: submission.value.description,
+      subdirectory: submission.value.subdirectory,
+      degreeCode: submission.value.degreeCode,
+    },
+  });
+  
+  return redirect(`/dashboard/courses/${course.id}`);
+}
+
+
+export async function AddModuleAction(_prevState: unknown, formData: FormData) {
+  // Validate the module form
+ const submission = await parseWithZod(formData, {
+  schema: ModuleCreationSchema({
+    async isSubdirectoryUnique() {
+      const existingSubDirectory = await prisma.module.findUnique({
+        where: {
+          slug: formData.get("slug") as string,
+        },
+      });
+      return !existingSubDirectory;  // Return true if unique, false otherwise
+    },
+  }),
+  async: true,
+});
+
+const courseId = formData.get("courseId") as string;
+if (!courseId) {
+  throw new Error("Course ID is missing.");
+}
+
+
+if (submission.status !== "success") {
+  return submission.reply();
+}
+
+ await prisma.module.create({
+  data: {
+    name: submission.value.name,
+    description: submission.value.description,
+    courseId: courseId,
+    slug: submission.value.slug
+  },
+});
+
+
+//console.log('Response:', response);
+return redirect(`/dashboard/new/editcourse/${courseId}/`);
+
+}
+
+export async function DeleteModuleAction({ moduleId }: { moduleId: string }) {
+  await prisma.module.delete({
+    where: {
+      id: moduleId,
+    },
+  });
+  // Return success or redirect
+  return { status: 'success' };
+}
+
+export async function AddResourceAction(_prevState: unknown, formData: FormData) {
+  console.log("Server action ADDRESOURCE ACTION called");
+  const user = await requireUser(); // Ensures user authentication
+
+  const submission = parseWithZod(formData, {
+    schema: resourceSchema, // Validate with Zod schema
+  });
+
+  if (submission.status !== 'success') {
+    return submission.reply();
+  }
+
+  const moduleSlug = formData.get('moduleSlug') as string;
+  const conceptId = formData.get('conceptId') as string;
+  const courseId = formData.get('courseId') as string;
+
+  console.log("ModuleSlug from server action: ", moduleSlug);
+  console.log("ConceptId from server action: ", conceptId);
+  console.log("CourseId from server action: ", courseId);
+
+  // Ensure moduleSlug and conceptId are present
+  if (!moduleSlug || !conceptId) {
+    throw new Error("Missing moduleSlug or conceptId");
+  }
+
+  const moduleExists = await prisma.module.findUnique({
+    where: { slug: moduleSlug },
+    select: { id: true }, // Only fetch the id
+  });
+
+  if(moduleExists){
+    console.log("ModuleExists from server action: ", moduleExists);
+    console.log("ModuleExistsID from SERVER action: ", moduleExists.id);
+  }
+  if (!moduleExists) {
+    throw new Error("Module with the given slug does not exist.");
+    console.log("Module with the given slug does not exist.");
+  }
+
+  const conceptExists = await prisma.concept.findUnique({
+    where: { id: conceptId },
+  });
+
+  if (!conceptExists) {
+    throw new Error("Concept with the given ID does not exist.");
+  }
+
+  // Check if the resource already exists by its slug (assuming slug = link)
+  const existingResource = await prisma.resource.findUnique({
+    where: { slug: submission.value.link },
+  });
+
+  if (existingResource) {
+    return submission.reply(); // If resource already exists, stop the process
+  }
+  
+
+  // Create the resource, linking it to both the module and the concept
+  await prisma.resource.create({
+    data: {
+      name: submission.value.name,
+      slug: submission.value.link,
+      description: submission.value.description || '',
+      type: submission.value.type,
+      moduleId: moduleExists.id,
+      userId: user.id,
+      conceptId: conceptExists.id, // Store the selected conceptId
+    },
+  });
+  
+  return redirect(`/dashboard/courses/${courseId}/module/${moduleSlug}`);
+}
+
+
+export async function AddConceptAction(_prevState: unknown, formData: FormData) {
+  const submission = await parseWithZod(formData, {
+    schema: conceptSchema, 
+    async: true
+  })
+
+  if (submission.status !== 'success') {
+    return submission.reply()
+}
+
+const moduleSlug = formData.get('slug') as string;
+const courseId = formData.get('courseId') as string;
+console.log("ModuleSlug from @Action: ", moduleSlug);
+
+if (!moduleSlug) {
+    throw new Error("Missing moduleSlug from addConceptAction");
+}
+
+
+const moduleExists = await prisma.module.findUnique({
+  where: { slug: moduleSlug },
+  select: { id: true, slug: true }, // Fetch only the id
+});
+
+if (!moduleExists) {
+  throw new Error("Module with the given slug does not exist.");
+}
+
+  await prisma.concept.create({
+    data: {
+      name: submission.value.name,
+      description: submission.value.description,
+      moduleId: moduleExists.id, // Use the module's id here
+    },
+  })
+  
+  return redirect(`/dashboard/courses/${courseId}/module/${moduleExists.slug}`)
+}
 
 
 // export async function CreateSiteAction(prevState: any, formData: FormData) {

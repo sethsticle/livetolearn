@@ -17,7 +17,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Planet Seth",
+  title: "Study Buddy",
   description: "Live to Learn",
 };
 
