@@ -1,6 +1,5 @@
 "use client"
 import { CreatePostAction } from '@/app/actions'
-import TailwindEditor from '@/app/components/dashboard/EditorWrapper'
 import { UploadDropzone } from '@/app/utils/UploadthingComponents'
 import { PostSchema } from '@/app/utils/zodSchema'
 import { Button } from '@/components/ui/button'
@@ -19,7 +18,13 @@ import { useFormState } from 'react-dom'
 import { toast } from 'sonner'
 import slugify from 'react-slugify'
 import { SubmitButton } from '@/app/components/dashboard/SubmitButtons'
+import dynamic from 'next/dynamic'
 
+// Dynamically import the TailwindEditor component
+const TailwindEditor = dynamic(() => import('@/app/components/dashboard/EditorWrapper'), {
+    ssr: false,  // Disable server-side rendering for this component
+    loading: () => <p>Loading editor...</p>, // Optional: loading state
+  });
 
 function PostCreationRoute({ params }: { params: { siteId: string } }) {
 

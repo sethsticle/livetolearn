@@ -15,7 +15,7 @@ import Link from 'next/link'
 import React, { Suspense } from 'react'
 
 // Fetch course data (this will also include modules)
-export async function getData(courseId: string) {
+async function getData(courseId: string) {
   const course = await prisma.course.findUnique({
     where: { id: courseId },
     include: { module: true }, // Include related modules
@@ -67,7 +67,7 @@ export default async function CourseIdRouteIndexPage({ params }: { params: { cou
 
 
 
-export  async function CourseIdRoute({ params }: { params: { courseId: string } }) {
+async function CourseIdRoute({ params }: { params: { courseId: string } }) {
 
   const courseData = await getData(params.courseId.toString())
 
@@ -177,7 +177,7 @@ export  async function CourseIdRoute({ params }: { params: { courseId: string } 
   )
 }
 
-export async function EditCourseButton({ courseId }: { courseId: string }) {
+async function EditCourseButton({ courseId }: { courseId: string }) {
   const user = await requireUser();
 
   // Check if user is an admin

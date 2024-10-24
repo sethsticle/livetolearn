@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Atom } from "lucide-react";
 import Image from "next/image";
-import TailwindEditor from "../EditorWrapper";
+
 import { SubmitButton } from "../SubmitButtons";
 import { useState } from "react";
 import { JSONContent } from "novel";
@@ -19,7 +19,15 @@ import { PostSchema } from "@/app/utils/zodSchema";
 import { toast } from "sonner";
 import slugify from "react-slugify";
 import { EditPostAction } from "@/app/actions";
+import dynamic from "next/dynamic";
 
+
+
+// Dynamically import the TailwindEditor component
+const TailwindEditor = dynamic(() => import('../EditorWrapper'), {
+    ssr: false,  // Disable server-side rendering for this component
+    loading: () => <p>Loading editor...</p>, // Optional: loading state
+  });
 
 
 //remember that we fetch the default values to input into the fields to differentiate between the edit and create routes

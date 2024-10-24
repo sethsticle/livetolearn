@@ -201,7 +201,7 @@ async function DashboardContent({ userId }: { userId: string }) {
   );
 }
 
-export async function AddCourseButton() {
+ async function AddCourseButton() {
   const user = await requireUser();
 
   // Check if user is an admin

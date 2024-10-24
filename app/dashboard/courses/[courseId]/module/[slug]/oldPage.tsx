@@ -12,7 +12,7 @@
 
 
 
-// export async function getData(slug: string) {
+//  async function getData(slug: string) {
 //   const module = await prisma.module.findUnique({
 //     where: { slug: slug },
 //     include: {
@@ -24,7 +24,7 @@
 //   return module;
 // }
 
-// export async function EditModuleButton({ slug, courseId }: { slug: string, courseId: string }) {
+//  async function EditModuleButton({ slug, courseId }: { slug: string, courseId: string }) {
 //   const user = await requireUser();
 //   // Check if user is an admin
 //   const admin = await prisma.user.findUnique({

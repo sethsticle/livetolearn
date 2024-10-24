@@ -3,8 +3,8 @@ import ClientModules from "@/app/components/dashboard/module/ClientModules";
 import prisma from "@/app/utils/db";
 import { requireUser } from "@/app/utils/requireUser";
 
-// Server-side data fetching
-export async function getData(slug: string) {
+// Helper function for server-side data fetching
+async function getData(slug: string) {
   const foundModule = await prisma.module.findUnique({
     where: { slug: slug },
     include: {
