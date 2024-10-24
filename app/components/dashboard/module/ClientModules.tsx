@@ -5,11 +5,11 @@ import { BackButton } from '../../BackButton';
 import { ResourceSection } from './ResourceSection';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { requireUser } from '@/app/utils/requireUser';
-import prisma from '@/app/utils/db';
+
 
 export default function ClientModules({ courseId, initialResources, moduleSlug, isAdmin }: { courseId: string, initialResources: Resource[], moduleSlug: string, isAdmin: boolean }) {
-    const [resources, setResources] = useState<Resource[]>(initialResources);
+    //const [resources, setResources] = useState<Resource[]>(initialResources);
+    const [resources] = useState<Resource[]>(initialResources);
 
     // // Function to fetch and update resources
     // const fetchResources = async () => {

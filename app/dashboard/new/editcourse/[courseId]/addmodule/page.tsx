@@ -1,15 +1,14 @@
 
 "use client"
-import { AddModuleAction, CreateSiteAction } from '@/app/actions'
+import { AddModuleAction } from '@/app/actions'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import React from 'react'
 import { useFormState } from 'react-dom'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { moduleSchema, siteSchema } from '@/app/utils/zodSchema'
+import { moduleSchema } from '@/app/utils/zodSchema'
 import { SubmitButton } from '@/app/components/dashboard/SubmitButtons'
 
 
@@ -41,7 +40,7 @@ function AddModuleRoute({params}: {params: {courseId: string}}) {
                 <CardHeader className=' flex gap-2 text-center'>
                     <CardTitle>Add New Module</CardTitle>
                     <CardDescription>
-                        Add or remove the course's modules here and click &apos;Save&apos; to confirm!
+                        Add course modules here and click &apos;Save&apos; to confirm!
                     </CardDescription>
                 </CardHeader>
                 <form id={form.id} onSubmit={form.onSubmit} action={action}>

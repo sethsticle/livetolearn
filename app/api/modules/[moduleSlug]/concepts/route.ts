@@ -5,12 +5,12 @@ export async function GET(req: Request, { params }: { params: { moduleSlug: stri
   
   console.log('Module slug received in API:', params.moduleSlug);
   // Find module by slug
-  const module = await prisma.module.findUnique({
+  const foundModule = await prisma.module.findUnique({
     where: { slug: params.moduleSlug },
     select: { id: true }, // Only fetch the id
   });
 
-  if (!module) {
+  if (!foundModule) {
     return NextResponse.json({ message: "Module not found" }, { status: 404 });
   }
 

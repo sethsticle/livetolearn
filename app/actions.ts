@@ -1,12 +1,10 @@
 "use server" //due to line 6 CRUCIAL
 import { redirect } from "next/navigation";
 import { parseWithZod } from '@conform-to/zod'
-import { conceptSchema, CourseCreationSchema, CourseEditSchema, ModuleCreationSchema, moduleSchema, PostSchema, resourceSchema, SiteCreationSchema } from "./utils/zodSchema";
+import { conceptSchema, CourseCreationSchema, CourseEditSchema, ModuleCreationSchema, PostSchema, resourceSchema, SiteCreationSchema } from "./utils/zodSchema";
 import prisma from "./utils/db"; //CRUCIAL ERROR DONT FORGET
 import { requireUser } from "./utils/requireUser";
 import { requireAdmin } from "./utils/requireAdmin";
-import CourseCreationRoute from "./dashboard/new/newcourse/page";
-import { SubmissionResult } from "@conform-to/react";
 
 export async function CreateSiteAction(_prevState: unknown, formData: FormData) {
     const user = await requireUser();
@@ -96,7 +94,7 @@ export async function CreateSiteAction(_prevState: unknown, formData: FormData) 
 }
 
 export async function CreateCourseAction(_prevState: unknown, formData: FormData) {
-  const user = await requireAdmin();
+   await requireAdmin();
 
   
       // Allow creating a site

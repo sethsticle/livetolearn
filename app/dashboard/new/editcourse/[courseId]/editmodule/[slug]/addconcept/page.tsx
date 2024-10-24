@@ -10,7 +10,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { useFormState } from "react-dom";
 
 
-export default function addConceptRoute({ params }: { params: { courseId: string, slug: string } }) {
+export default function AddConceptRoute({ params }: { params: { courseId: string, slug: string } }) {
 
     const [lastResult, action] = useFormState(AddConceptAction, undefined);
 
@@ -33,7 +33,7 @@ export default function addConceptRoute({ params }: { params: { courseId: string
             <CardHeader className="flex gap-2 text-center">
               <CardTitle>Add New Concept</CardTitle>
               <CardDescription>
-                Add or remove concepts for the module here and click 'Save' to confirm!
+                Add or remove concepts for the module here and click Save to confirm!
               </CardDescription>
             </CardHeader>
             <form id={form.id} onSubmit={form.onSubmit} action={action}>

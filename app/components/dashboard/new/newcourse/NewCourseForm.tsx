@@ -1,7 +1,7 @@
 "use client"
-import { requireAdmin } from '@/app/utils/requireAdmin'
-import React, { useEffect, useState } from 'react'
-import { CreateCourseAction, CreateSiteAction } from '@/app/actions'
+
+import React from 'react'
+import { CreateCourseAction } from '@/app/actions'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useFormState } from 'react-dom'
 import { useForm } from '@conform-to/react'
 import { parseWithZod } from '@conform-to/zod'
-import { courseSchema, siteSchema } from '@/app/utils/zodSchema'
+import { courseSchema } from '@/app/utils/zodSchema'
 import { SubmitButton } from '@/app/components/dashboard/SubmitButtons'
 
 function NewCourseForm() {

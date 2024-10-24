@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { SubmitButton } from '@/app/components/dashboard/SubmitButtons';
-import { Course, Module } from '@/app/utils/types';  // Import your types
+import { Course } from '@/app/utils/types';  // Import your types
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useFormState } from 'react-dom';
 import { EditCourseAction } from '@/app/actions';
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { courseSchema } from '@/app/utils/zodSchema';
-import { FormSubmitButton } from '@/app/components/dashboard/new/editcourse/FormSubmitButton'
+
 
 
 
@@ -29,7 +29,6 @@ export default function EditCourseForm({ courseData, courseId }: { courseData: C
       shouldRevalidate: "onInput",
     });
   
-    const formId = `course-edit-form-${courseId}`;
 
     return (
       <div className="flex flex-col h-full w-full items-center justify-center">

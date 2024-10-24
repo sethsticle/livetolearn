@@ -1,23 +1,15 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card} from '@/components/ui/card';
 import { Trash, Edit } from 'lucide-react';
-import { SubmitButton } from '@/app/components/dashboard/SubmitButtons';
-import { useFormState } from 'react-dom';
-import { AddModuleAction, DeleteModuleAction } from '@/app/actions'; // Include your delete action
-import { useForm } from '@conform-to/react';
-import { parseWithZod } from '@conform-to/zod';
-import { moduleSchema } from '@/app/utils/zodSchema';
 import { Course, Module } from '@/app/utils/types'; // Ensure types are imported
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { FormSubmitButton } from '@/app/components/dashboard/new/editcourse/FormSubmitButton'
 
-export default function AddModuleCard({ courseData, courseId }: { courseData: Course, courseId: string }) {
-    const [modules, setModules] = useState<Module[]>(courseData?.module || []); // Use initial courseData.modules
+
+export default function AddModuleCard({ courseData }: { courseData: Course }) {
+    const [modules] = useState<Module[]>(courseData?.module || []); // Use initial courseData.modules
+    //const [modules, setModules] = useState<Module[]>(courseData?.module || []); // Use initial courseData.modules
 
     // const [deleteModuleId, setDeleteModuleId] = useState<string | null>(null); // Track module to delete
     

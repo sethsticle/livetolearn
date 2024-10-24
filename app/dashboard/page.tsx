@@ -76,7 +76,7 @@ async function DashboardContent({ userId }: { userId: string }) {
 
   const data = await getData(userId); // Prisma logic for fetching data
 
-  const { posts, sites, courses, modules } = data;
+  const { posts, sites, courses } = data;
 
   return (
     <div className="flex flex-col gap-4">

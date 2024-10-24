@@ -1,5 +1,4 @@
 import { BackButton } from '@/app/components/BackButton'
-import EditCourseForm from '@/app/components/dashboard/new/editcourse/EditCourseForm'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'

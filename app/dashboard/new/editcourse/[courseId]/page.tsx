@@ -1,5 +1,4 @@
 import { BackButton } from '@/app/components/BackButton';
-import AddModuleCard from '@/app/components/dashboard/new/editcourse/AddModuleCard';
 import EditCourseForm from '@/app/components/dashboard/new/editcourse/EditCourseForm';
 import ModuleCardDisplay from '@/app/components/dashboard/new/editcourse/ModuleCardDisplay';
 import prisma from '@/app/utils/db';
@@ -30,7 +29,7 @@ async function EditCourseRoute({ params }: { params: { courseId: string } }) {
             </header>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 h-full w-full  items-center p-2'>
                 <div className=' col-span-2'><EditCourseForm courseData={courseData} courseId={params.courseId} /></div>
-                <div className=' h-full'><ModuleCardDisplay courseData={courseData} courseId={params.courseId} /></div>
+                <div className=' h-full'><ModuleCardDisplay courseData={courseData} /></div>
 
             </div>
 

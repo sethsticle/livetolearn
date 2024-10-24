@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from 'react';
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { AddResourceAction } from '@/app/actions';
 import { useFormState } from 'react-dom';
@@ -10,7 +8,6 @@ import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import { resourceSchema } from '@/app/utils/zodSchema';
 import { Concept } from '@prisma/client';
-import { toast } from 'sonner';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { SubmitButton } from '@/app/components/dashboard/SubmitButtons';
 import { BackButton } from '@/app/components/BackButton';
@@ -55,7 +52,7 @@ export default function AddResource({ params }: { params: { courseId: string, sl
                 <Card className="max-w-[450px]">
                     <CardHeader className="flex gap-2 text-center">
                         <CardTitle>Add New Resource</CardTitle>
-                        <CardDescription>Add resources for the module here and click 'Save' to confirm!</CardDescription>
+                        <CardDescription>Add resources for the module here and click Save to confirm!</CardDescription>
                     </CardHeader>
 
                     <form id={form.id} onSubmit={form.onSubmit} action={action}>

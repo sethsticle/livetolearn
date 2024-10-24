@@ -3,7 +3,7 @@ import prisma from '@/app/utils/db';
 
 export async function GET(req: Request, { params }: { params: { moduleSlug: string } }) {
     // Find the module by the moduleSlug
-    const module = await prisma.module.findUnique({
+    const foundModule = await prisma.module.findUnique({
         where: { slug: params.moduleSlug },
         include: {
             resource: {
@@ -13,12 +13,12 @@ export async function GET(req: Request, { params }: { params: { moduleSlug: stri
     });
 
     // If no module is found, return a 404 error
-    if (!module) {
+    if (!foundModule) {
         return NextResponse.json({ message: "Module not found" }, { status: 404 });
     }
 
     // Return the resources of the module
-    return NextResponse.json(module.resource, {
+    return NextResponse.json(foundModule.resource, {
         headers: {
             'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
         },

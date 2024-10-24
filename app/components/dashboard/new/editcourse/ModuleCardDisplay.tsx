@@ -5,10 +5,10 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Edit, Trash } from 'lucide-react';
 import React, { useState } from 'react'
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 
-export default function ModuleCardDisplay({ courseData, courseId }: { courseData: Course, courseId: string }) {
+export default function ModuleCardDisplay({ courseData }: { courseData: Course }) {
     const [modules, setModules] = useState<Module[]>(courseData?.module || []); // Use initial courseData.modules
 
 

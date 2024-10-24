@@ -1,15 +1,12 @@
 import { BackButton } from '@/app/components/BackButton'
 import FAQSection from '@/app/components/dashboard/FAQSection'
 import prisma from '@/app/utils/db'
-import { requireAdmin } from '@/app/utils/requireAdmin'
 import { requireUser } from '@/app/utils/requireUser'
 import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -57,7 +54,7 @@ const courseInfoTable = [
 ];
 
 export default async function CourseIdRouteIndexPage({ params }: { params: { courseId: string } }) {
-  const user = await requireUser(); // Check if user is authenticated
+  await requireUser(); // Check if user is authenticated
 
   return (
       <div className="flex flex-col items-center justify-center">
@@ -70,7 +67,7 @@ export default async function CourseIdRouteIndexPage({ params }: { params: { cou
 
 
 
-export  async function CourseIdRoute({ params }: { params: { courseId: String } }) {
+export  async function CourseIdRoute({ params }: { params: { courseId: string } }) {
 
   const courseData = await getData(params.courseId.toString())
 

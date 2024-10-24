@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import DashboardItems from "../components/dashboard/DashboardItems"
-import { Home, DollarSign, Globe, CircleUser } from 'lucide-react'
+import { Home, CircleUser } from 'lucide-react'
 import { ThemeToggle } from '../components/dashboard/ThemeToggle'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { Button } from '@/components/ui/button'
