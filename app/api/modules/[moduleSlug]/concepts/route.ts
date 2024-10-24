@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: { moduleSlug: stri
 
   // Find concepts related to this module
   const concepts = await prisma.concept.findMany({
-    where: { moduleId: module.id }, // Use moduleId
+    where: { moduleId: foundModule.id }, // Use moduleId
     include: { resources: true }, // Include resources associated with the concept
   });
   console.log("Concepts from API: ", concepts)

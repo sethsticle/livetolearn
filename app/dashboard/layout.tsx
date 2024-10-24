@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="hidden border-r bg-muted/40 md:block">
           <div className="sticky top-0 h-screen flex flex-col gap-2">
             {/* Logo Section */}
-            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-2 overflow-hidden text-nowrap border border-red-400">
+            <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 gap-2 overflow-hidden text-nowrap">
               <Image src={"/2.png"} alt="logo" width={32} height={32} />
               <Link href="/">
                 <h3 className="text-2xl">

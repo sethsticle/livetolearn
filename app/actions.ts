@@ -274,7 +274,7 @@ export async function AddResourceAction(_prevState: unknown, formData: FormData)
       type: submission.value.type,
       moduleId: moduleExists.id,
       userId: user.id,
-      conceptId: conceptExists.id, // Store the selected conceptId
+      conceptId: conceptExists.id || null, // Store the selected conceptId
     },
   });
   
