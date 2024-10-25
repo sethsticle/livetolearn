@@ -6,14 +6,27 @@ import { BackButton } from '@/app/components/BackButton';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { RenderPost } from "@/app/components/dashboard/RenderPost";
-import { JSONContent } from 'novel';
+import { JSONContent } from 'novel'; // Assuming JSONContent type aligns with RenderPost's requirements
+import { Prisma } from "@prisma/client";
 
-// Helper function for server-side data fetching
+// Define the default JSON content structure that RenderPost can handle
+const defaultJSONContent: JSONContent = {
+  type: "doc",
+  content: [
+    {
+      type: "paragraph",
+      content: [
+        { type: "text", text: "Welcome! Add content here to display in this module." },
+      ],
+    },
+  ],
+};
+
+
 async function getData(slug: string) {
   const foundModule = await prisma.module.findUnique({
-    where: { slug: slug },
+    where: { slug },
     include: {
-
       resource: {
         include: { concept: true },
       },
@@ -21,16 +34,20 @@ async function getData(slug: string) {
   });
 
   if (!foundModule) {
-    throw new Error('Module not found');
+    throw new Error("Module not found");
   }
 
   const user = await requireUser();
   const admin = await prisma.user.findUnique({
-    where: {
-      id: user.id,
-      role: 'ADMIN',
-    },
+    where: { id: user.id, role: "ADMIN" },
   });
+
+  // Enforce details as an object or use default JSON
+  if (typeof foundModule.details === "object" && foundModule.details !== null) {
+    foundModule.details = foundModule.details as Prisma.JsonObject;
+  } else {
+    foundModule.details = defaultJSONContent; // Assign default structure if it's missing or invalid
+  }
 
   return { foundModule, isAdmin: !!admin };
 }
@@ -38,38 +55,38 @@ async function getData(slug: string) {
 // Server-side page
 export default async function Modules({ params }: { params: { courseId: string, slug: string } }) {
   const { foundModule, isAdmin } = await getData(params.slug);
-  // foundModule.details = foundModule.details ? JSON.parse(foundModule.details as string) : {};
   const user = await requireUser();
+
   return (
     <>
       <header>
         <div className="flex flex-row align-middle items-center w-full justify-between">
           <BackButton path={`/dashboard/courses/${params.courseId}`} text="Back to Course" />
-          <div className='flex flex-row gap-2'>
-            {isAdmin && (<>
-              
-              <Button asChild><Link href={`/dashboard/new/editcourse/${params.courseId}/editmodule/${params.slug}`}>Edit Module</Link></Button>
-              <Button asChild><Link href={`/dashboard/new/editcourse/${params.courseId}/editmodule/${params.slug}/addconcept`}>Add Concept</Link></Button>
+          <div className="flex flex-row gap-2">
+            {isAdmin && (
+              <>
+                <Button asChild>
+                  <Link href={`/dashboard/new/editcourse/${params.courseId}/editmodule/${params.slug}`}>Edit Module</Link>
+                </Button>
+                <Button asChild>
+                  <Link href={`/dashboard/new/editcourse/${params.courseId}/editmodule/${params.slug}/addconcept`}>Add Concept</Link>
+                </Button>
               </>
             )}
-            <Button asChild><Link href={`/dashboard/new/editcourse/${params.courseId}/editmodule/${params.slug}/addresource`}>Add Resource</Link></Button>
+            <Button asChild>
+              <Link href={`/dashboard/new/editcourse/${params.courseId}/editmodule/${params.slug}/addresource`}>Add Resource</Link>
+            </Button>
           </div>
         </div>
       </header>
 
-
-      <div className=' min-h-[250px] py-2 w-full'>
-        <RenderPost json={foundModule?.details as JSONContent} />
+      <div className="min-h-[250px] py-2 w-full">
+        <RenderPost json={foundModule.details as JSONContent} />
       </div>
 
-      {/* You no longer need Suspense here for route loading */}
       <ClientModules
         userId={user.id}
-        // courseId={params.courseId}
-        initialResources={foundModule?.resource || []}
-        // moduleSlug={params.slug}
-        // isAdmin={isAdmin}
-
+        initialResources={foundModule.resource || []}
       />
     </>
   );
