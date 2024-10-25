@@ -1,5 +1,7 @@
 import { BackButton } from '@/app/components/BackButton'
 import FAQSection from '@/app/components/dashboard/FAQSection'
+import { RenderPost } from '@/app/components/dashboard/RenderPost'
+import LoadingScreen from '@/app/components/LoadingScreen'
 import prisma from '@/app/utils/db'
 import { requireUser } from '@/app/utils/requireUser'
 import { Button } from '@/components/ui/button'
@@ -12,13 +14,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import Link from 'next/link'
+import { JSONContent } from 'novel'
 import React, { Suspense } from 'react'
 
 // Fetch course data (this will also include modules)
 async function getData(courseId: string) {
   const course = await prisma.course.findUnique({
     where: { id: courseId },
-    include: { module: true }, // Include related modules
+    include: { 
+      module: {
+        orderBy: { year: 'asc' }, // Order modules by year
+
+      }
+    }, // Include related modules
   //   where: { id: courseId },
   //   include: {
   //     module: {
@@ -65,7 +73,7 @@ export default async function CourseIdRouteIndexPage({ params }: { params: { cou
 
   return (
       <div className="flex flex-col items-center justify-center">
-        <Suspense fallback={<div>Loading course data...</div>}>
+        <Suspense fallback={<LoadingScreen/>}>
           <CourseIdRoute params={params} /> {/* Pass params to CourseIdRoute */}
         </Suspense>
       </div>
@@ -109,30 +117,9 @@ async function CourseIdRoute({ params }: { params: { courseId: string } }) {
           </Table>
         </div>
 
-
-        <div className="w-full px-8">
-          <h2 className='text-primary font-bold text-lg'>Requirements</h2>
-          <ul className="list-disc list-inside">
-            <li>Must have daily access to a computer with a stable internet connection.</li>
-            <li>Must have passed Computer Application Technology or Information Technology with a rating of 4 (new NSC) or passed Computer Studies (old Senior Certificate).</li>
-            <li>Alternatively, hold an Industry Standard qualification like ICDL in Computer Literacy.</li>
-            <li>Students not meeting this requirement are advised to complete EUP1501 before starting the qualification.</li>
-            <li>Completion of the Unisa First-Year Experience MOOC (FYE MOOC 101) is required.</li>
-          </ul>
-        </div>
-
-        <div className="w-full px-8">
-          <h2 className='text-primary font-bold text-lg'>Purpose Statement</h2>
-          <ul className="list-disc list-inside">
-            <li>Develop a systematic and coherent body of knowledge in computing.</li>
-            <li>Understand and apply computing concepts and principles in the workplace.</li>
-            <li>Gain strong cognitive, problem-solving, and communication skills.</li>
-            <li>Build competence in accessing and evaluating scientific information.</li>
-            <li>Apply knowledge through basic research and practice.</li>
-            <li>Gain personal intellectual growth and contribute to science and technology in society.</li>
-          </ul>
-        </div>
-    
+          <div className=' w-full min-h-[250px] py-2' >
+              <RenderPost json={courseData?.details as JSONContent} />
+          </div>
 
 
 

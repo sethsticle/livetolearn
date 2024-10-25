@@ -74,3 +74,43 @@ h1, h2, h3, p {
     @apply bg-background text-foreground;
   }
 }
+
+/* Apply shimmer effect */
+.loading-shimmer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.shimmer-content {
+  font-size: 1.5rem;
+  /* padding: 10px 20px; */
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent;
+  background: linear-gradient(
+    to right,
+    #3a84d8 0%,
+    #496dee 20%,
+    #706ae9 40%,
+    #9167d0 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 2.5s linear infinite;
+  border-radius: 5px;
+  opacity: 20%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

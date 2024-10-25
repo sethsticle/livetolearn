@@ -54,6 +54,14 @@ function AddModuleRoute({params}: {params: {courseId: string}}) {
 
                         <Input name={fields.slug.name} key={fields.slug.name} placeholder="Module Slug" />
                         <p className="text-red-500 text-sm">{fields.slug.errors}</p>
+
+                        <select name={fields.year.name} key={fields.year.name} className="mt-2 p-2 border rounded">
+                            <option value="">Select Year</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
                     </CardContent>
                     <CardFooter className='justify-center'>
                         <SubmitButton text='Save' />

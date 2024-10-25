@@ -4,11 +4,11 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card} from '@/components/ui/card';
 import { Trash, Edit } from 'lucide-react';
-import { Course, Module } from '@/app/utils/types'; // Ensure types are imported
+import { Course, ModuleType } from '@/app/utils/types'; // Ensure types are imported
 
 
 export default function AddModuleCard({ courseData }: { courseData: Course }) {
-    const [modules] = useState<Module[]>(courseData?.module || []); // Use initial courseData.modules
+    const [modules] = useState<ModuleType[]>(courseData?.module || []); // Use initial courseData.modules
     //const [modules, setModules] = useState<Module[]>(courseData?.module || []); // Use initial courseData.modules
 
     // const [deleteModuleId, setDeleteModuleId] = useState<string | null>(null); // Track module to delete

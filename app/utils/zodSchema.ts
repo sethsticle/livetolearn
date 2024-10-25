@@ -15,14 +15,15 @@ export const PostSchema = z.object({
   coverImage: z.string().min(1),
   smallDescription: z.string().min(1).max(200),
   postContent: z.string().min(1)
-  //^^ we will use this to store the content of the post
+  //^^ we will use this to validate the content of the post
 })
 
 export const courseSchema = z.object({
   name: z.string().min(1, 'Name is required').max(35, 'Name must be less than 35 characters'),
   description: z.string().min(1, 'Description is required').max(100, 'Description must be less than 100 characters'),
   subdirectory: z.string().min(1, 'subdirectory is required').max(40, 'subdirectory must be less than 40 characters'),
-  degreeCode: z.string().min(1, 'degreeCode is required').max(10, 'degreeCode must be less than 10 characters')
+  degreeCode: z.string().min(1, 'degreeCode is required').max(10, 'degreeCode must be less than 10 characters'),
+  details: z.string().min(1, 'details are required')
 })
 
 //we will use this to make sure that the subdirectory is unique
@@ -105,6 +106,7 @@ export function CourseCreationSchema(options?: {
 export function moduleSchema() {
   return z.object({
     name: z.string().min(1, "Module name is required."),
+    year: z.number().min(1).max(4, "Year must be between 1 and 4"),
     description: z.string().min(1, "Module description is required."),
     slug: z
       .string()
@@ -113,8 +115,22 @@ export function moduleSchema() {
       .regex(/^[a-z0-9]+$/, "Slug must only use lowercase letters and numbers.")
       .transform((value) => value.toLocaleLowerCase()),
   });
-
 }
+
+// export function moduleEditSchema() {
+//   return z.object({
+//     name: z.string().min(1, "Module name is required."),
+//     year: z.number().min(1).max(4, "Year must be between 1 and 4"),
+//     description: z.string().min(1, "Module description is required."),
+//     details: z.string().min(1, "Module details are required."),
+//     slug: z
+//       .string()
+//       .min(1)
+//       .max(40)
+//       .regex(/^[a-z0-9]+$/, "Slug must only use lowercase letters and numbers.")
+//       .transform((value) => value.toLocaleLowerCase()),
+//   });
+// }
 
 export function ModuleCreationSchema(options?: {
   isSubdirectoryUnique: () => Promise<boolean>;
@@ -149,6 +165,7 @@ export function ModuleCreationSchema(options?: {
       ),
     name: z.string().min(1).max(35, "Module name is required."),
     description: z.string().min(1).max(150, "Module description is required."),
+    year: z.number().min(1).max(4, "Year must be between 1 and 4"),
 
   });
 
@@ -159,6 +176,7 @@ export function CourseEditSchema() {
     name: z.string().min(1).max(35),
     description: z.string().min(1).max(150),
     degreeCode: z.string().min(1).max(10),
+    details: z.string().min(1),
     subdirectory: z
       .string()
       .min(1)

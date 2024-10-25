@@ -1,4 +1,5 @@
 import { ResourceType, User } from "@prisma/client";
+import { JSONContent } from "novel";
 
   // Define the type for a Course
   export interface Course {
@@ -7,15 +8,18 @@ import { ResourceType, User } from "@prisma/client";
     description: string;
     subdirectory: string;
     degreeCode: string;
-    module?: Module[];  // A course can have multiple modules
+    module?: ModuleType[];  // A course can have multiple modules
+    details: JSONContent;
   }
 
 // Define the type for a Module
-export interface Module {
+export interface ModuleType {
     id: string;  // Optional because it may not exist before being added
     name: string;
     description: string;
     slug: string;
+    year: number;
+    details: JSONContent;
   }
   
   export interface Post {
@@ -45,7 +49,6 @@ export interface Module {
     description?: string | null;
     // resources: Resource[];
   }
-  
   export interface Resource {
     id: string;
     name: string;
@@ -53,5 +56,13 @@ export interface Module {
     description: string;
     type: ResourceType;
     conceptId: string | null;
-    concept: Concept | null; // Note that `concept` can be `null` in your schema.
+    concept: Concept | null;
+    upVotes: number; // Add these properties
+    downVotes: number; // Add these properties
+  }
+
+  export interface VoteState {
+    upVotes: number;
+    downVotes: number;
+    userVote: "upvote" | "downvote" | null;
   }

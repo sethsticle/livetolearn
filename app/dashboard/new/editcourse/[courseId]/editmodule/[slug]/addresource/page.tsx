@@ -49,7 +49,7 @@ export default function AddResource({ params }: { params: { courseId: string, sl
         <div className='flex flex-col w-full h-full'>
             <div><BackButton path={`/dashboard/courses/${params.courseId}/module/${params.slug}`} text='Cancel' /></div>
             <div className="flex flex-col flex-1 items-center justify-center">
-                <Card className="max-w-[450px]">
+                <Card className="max-w-[450px] ">
                     <CardHeader className="flex gap-2 text-center">
                         <CardTitle>Add New Resource</CardTitle>
                         <CardDescription>Add resources for the module here and click Save to confirm!</CardDescription>
@@ -59,14 +59,14 @@ export default function AddResource({ params }: { params: { courseId: string, sl
                         <input type="hidden" name="moduleSlug" value={params.slug} />
                         <input type="hidden" name="courseId" value={params.courseId} />
 
-                        <CardContent>
+                        <CardContent className='flex gap-2 flex-col '>
                             <Input name={fields.name.name} placeholder="Resource Name" key={fields.name.name} />
                             <p className="text-red-500 text-sm">{fields.name.errors || lastResult?.error?.slug}</p>
 
                             <Input name={fields.link.name} placeholder="Resource Link" key={fields.link.name} />
                             <p className="text-red-500 text-sm">{fields.link.errors}</p>
 
-                            <select name={fields.type.name} key={fields.type.name} className="mt-2 p-2 border rounded">
+                            <select name={fields.type.name} key={fields.type.name} className=" p-2 border rounded">
                                 <option value="">Select Resource Type</option>
                                 <option value="TEXTBOOK">Textbook</option>
                                 <option value="TUTORIAL_LETTER">Tutorial Letter</option>
@@ -75,7 +75,7 @@ export default function AddResource({ params }: { params: { courseId: string, sl
                             </select>
                             <p className="text-red-500 text-sm">{fields.type.errors}</p>
 
-                            <select name="conceptId" className="mt-2 p-2 border rounded">
+                            <select name="conceptId" className="mb-4 p-2 border rounded">
                                 <option value="">Select Concept</option>
                                 {Array.isArray(concepts) && concepts.length > 0 ? (
                                     concepts.map((concept) => (

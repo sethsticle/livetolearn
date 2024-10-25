@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Module" ALTER COLUMN "year" DROP DEFAULT;

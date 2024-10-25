@@ -1,7 +1,7 @@
 "use server" //due to line 6 CRUCIAL
 import { redirect } from "next/navigation";
 import { parseWithZod } from '@conform-to/zod'
-import { conceptSchema, CourseCreationSchema, CourseEditSchema, ModuleCreationSchema, PostSchema, resourceSchema, SiteCreationSchema } from "./utils/zodSchema";
+import { conceptSchema, CourseCreationSchema, CourseEditSchema, ModuleCreationSchema, moduleSchema, PostSchema, resourceSchema, SiteCreationSchema } from "./utils/zodSchema";
 import prisma from "./utils/db"; //CRUCIAL ERROR DONT FORGET
 import { requireUser } from "./utils/requireUser";
 import { requireAdmin } from "./utils/requireAdmin";
@@ -150,12 +150,47 @@ export async function EditCourseAction(_prevState: unknown, formData: FormData) 
       description: submission.value.description,
       subdirectory: submission.value.subdirectory,
       degreeCode: submission.value.degreeCode,
+      details: JSON.parse(submission.value.details),
     },
   });
   
   return redirect(`/dashboard/courses/${course.id}`);
 }
 
+export async function EditModuleAction(_prevState: unknown, formData: FormData) {
+  // Validate the module form
+ const submission = await parseWithZod(formData, {
+  schema: moduleSchema(),
+  async: true,
+});
+
+if (submission.status !== 'success') {
+  return submission.reply();
+}
+const courseId = formData.get("courseId") as string;
+
+if (!formData.get('moduleSlug')) {
+  throw new Error("Module ID is missing or invalid.");
+}
+
+ await prisma.module.update({
+  where: {
+    slug: formData.get('moduleSlug') as string ,
+  },
+  data: {
+    name: submission.value.name,
+    description: submission.value.description,
+    slug: submission.value.slug,
+    year: submission.value.year,
+    details: JSON.parse(formData.get('details') as string),
+  },
+});
+
+
+//console.log('Data:', data); // Log the data being fetched
+
+return redirect(`/dashboard/courses/${courseId}/module/${formData.get('moduleSlug')}`);
+}
 
 export async function AddModuleAction(_prevState: unknown, formData: FormData) {
   // Validate the module form
@@ -188,7 +223,8 @@ if (submission.status !== "success") {
     name: submission.value.name,
     description: submission.value.description,
     courseId: courseId,
-    slug: submission.value.slug
+    slug: submission.value.slug,
+    year: submission.value.year
   },
 });
 
@@ -197,6 +233,8 @@ if (submission.status !== "success") {
 return redirect(`/dashboard/new/editcourse/${courseId}/`);
 
 }
+
+//edit module action
 
 export async function DeleteModuleAction({ moduleId }: { moduleId: string }) {
   await prisma.module.delete({

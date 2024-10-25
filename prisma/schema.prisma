@@ -28,7 +28,6 @@ enum ResourceType {
   YOUTUBE_LINK
 }
 
-
 model User {
   id           String @id @default(uuid()) // make sure id is a UUID for consistency
   email        String
@@ -50,6 +49,9 @@ model User {
 
   // 1 User <-> Many Resources (1:M relation)
   resources Resource[] @relation("UserResource")
+
+  // 1 User <-> Many Votes (1:M relation)
+  votes ResourceVote[] @relation("UserVote")
 }
 
 model Site {
@@ -113,6 +115,8 @@ model Course {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
   degreeCode   String
+  details Json @default("{}")
+
   // Relation to Module (Many Modules <-> 1 Course)
   module       Module[] @relation("CourseModule")
 }
@@ -124,10 +128,11 @@ model Module {
   slug        String   @unique
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  // year        Int
+  year        Int
+  details Json @default("{}")
   // Relation to Course (Many Courses <-> 1 Module)
-  course   Course @relation(fields: [courseId], references: [id], name: "CourseModule")
-  courseId String // Foreign Key for Course
+  course      Course   @relation(fields: [courseId], references: [id], name: "CourseModule")
+  courseId    String // Foreign Key for Course
 
   // Relation to Resource (Many Resources <-> 1 Module)
   resource Resource[] @relation("ModuleResource")
@@ -142,32 +147,47 @@ model Resource {
   description String
   slug        String       @unique
   type        ResourceType
-  upVotes   Int      @default(0)
-  downVotes Int      @default(0)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  upVotes     Int          @default(0)
+  downVotes   Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
 
   // Relation to Module (Many Modules <-> 1 Resource)
-  module    Module?  @relation(fields: [moduleId], references: [id], name: "ModuleResource")
-  moduleId  String? // Foreign Key for Module
+  module   Module? @relation(fields: [moduleId], references: [id], name: "ModuleResource")
+  moduleId String? // Foreign Key for Module
 
   // Relation to User (Many Users <-> 1 Resource)
   user   User   @relation(fields: [userId], references: [id], name: "UserResource")
   userId String // Foreign Key for User
 
   // Relation to Concept (Many Resources <-> 1 Concept)
-  concept     Concept?     @relation(fields: [conceptId], references: [id], name: "ResourceConcept")
-  conceptId   String?      // Foreign Key for Concept
+  concept   Concept? @relation(fields: [conceptId], references: [id], name: "ResourceConcept")
+  conceptId String? // Foreign Key for Concept
+
+  votes ResourceVote[] @relation("ResourceVote") // Relation to Votes (Many Votes <-> 1 Resource)
 }
 
 model Concept {
-  id          String   @id @default(uuid())
+  id          String     @id @default(uuid())
   name        String
   description String?
-  module      Module   @relation(fields: [moduleId], references: [id], onDelete: Cascade, name: "ModuleConcept")
-  moduleId    String   // Foreign Key to Module
+  module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade, name: "ModuleConcept")
+  moduleId    String // Foreign Key to Module
   resources   Resource[] @relation("ResourceConcept")
 }
+
+model ResourceVote {
+  id         String   @id @default(uuid())
+  resourceId String
+  userId     String
+  voteType   String // Use enum if you prefer type safety, e.g., "UPVOTE" | "DOWNVOTE"
+
+  resource   Resource @relation(fields: [resourceId], references: [id], name: "ResourceVote")
+  user       User     @relation(fields: [userId], references: [id], name: "UserVote")
+
+  @@unique([resourceId, userId]) // Ensures one vote per user per resource
+}
+
 
 //relations: 
 //each site can have multiple posts

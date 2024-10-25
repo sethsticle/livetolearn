@@ -20,13 +20,14 @@ import { toast } from "sonner";
 import slugify from "react-slugify";
 import { EditPostAction } from "@/app/actions";
 import dynamic from "next/dynamic";
+import LoadingScreen from "../../LoadingScreen";
 
 
 
 // Dynamically import the TailwindEditor component
-const TailwindEditor = dynamic(() => import('../EditorWrapper'), {
+const TailwindEditor = dynamic(() => import('../TailwindEditor'), {
     ssr: false,  // Disable server-side rendering for this component
-    loading: () => <p>Loading editor...</p>, // Optional: loading state
+    loading: () => <LoadingScreen/>, // Optional: loading state
   });
 
 

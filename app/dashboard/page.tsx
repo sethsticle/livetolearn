@@ -13,6 +13,7 @@ import Defaultimage from "@/public/2.png";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Suspense } from 'react';
+import LoadingScreen from "../components/LoadingScreen";
 
 
 async function getData(userId: string) {
@@ -57,20 +58,14 @@ export default async function DashboardIndexPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <Suspense fallback={<LoadingFallback />}>
+      <Suspense fallback={<LoadingScreen />}>
         <DashboardContent userId={user.id} />
       </Suspense>
     </div>
   );
 }
 
-function LoadingFallback() {
-  return (
-    <div className="flex justify-center items-center min-h-screen">
-      <p>Loading...</p> {/* Replace this with a spinner or loader component */}
-    </div>
-  );
-}
+
 
 async function DashboardContent({ userId }: { userId: string }) {
 
@@ -116,8 +111,8 @@ async function DashboardContent({ userId }: { userId: string }) {
 
         <EmptyState
           title="Oh no! We dont seem to see any courses here"
-          description="Not to worry. Please get in touch with our admins to sort it out: seth@hendrikz@gmail.com"
-          path="mailto:seth@hendrikz@gmail.com"
+          description="Not to worry. You can create one for free of course :)"
+          path="/dashboard/new/newcourse"
         />
 
       )}

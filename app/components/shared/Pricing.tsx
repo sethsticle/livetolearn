@@ -59,15 +59,15 @@ export function Pricing() {
         <>
             {/* heading */}
             <div className="max-w-3xl mx-auto text-center">
-                <p className="font-semibold text-primary text-xl">Pricing</p>
+                <p className="font-semibold text-primary text-xl">Hey there!</p>
                 <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-                    Pricing plans for everyone and every budget!
+                   You seem to have either used up our 2 site per person limit or stumbled upon a grifty little bug. 
                 </h1>
             </div>
             {/* description */}
             <p className="mx-auto mt-6 max-w-2xl text-center leading-tight text-muted-foreground">
-                Distinctio et nulla eum soluta et neque labore quibusdam. Saepe et quasi
-                iusto modi velit ut non voluptas in. Explicabo id ut laborum.
+                I have not yet implemented a billing system, too busy looking for a way to do it all for free so there won&apos;t be any need for it. 
+
             </p>
 
             {/* pricing plans */}

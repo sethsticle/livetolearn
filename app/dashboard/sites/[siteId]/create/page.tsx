@@ -19,11 +19,12 @@ import { toast } from 'sonner'
 import slugify from 'react-slugify'
 import { SubmitButton } from '@/app/components/dashboard/SubmitButtons'
 import dynamic from 'next/dynamic'
+import LoadingScreen from '@/app/components/LoadingScreen'
 
 // Dynamically import the TailwindEditor component
-const TailwindEditor = dynamic(() => import('@/app/components/dashboard/EditorWrapper'), {
+const TailwindEditor = dynamic(() => import('@/app/components/dashboard/TailwindEditor'), {
     ssr: false,  // Disable server-side rendering for this component
-    loading: () => <p>Loading editor...</p>, // Optional: loading state
+    loading: () => <LoadingScreen/> // Optional: loading state
   });
 
 function PostCreationRoute({ params }: { params: { siteId: string } }) {
