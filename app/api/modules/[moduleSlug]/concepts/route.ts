@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server';
 import prisma from '@/app/utils/db';
 
-export async function GET(req: Request, { params }: { params: { moduleSlug: string } }) {
-  
-  console.log('Module slug received in API:', params.moduleSlug);
+export async function GET(req: Request) {
+  // Extract moduleSlug from the URL
+  const url = new URL(req.url);
+  const moduleSlug = url.pathname.split('/').pop(); // Assumes `moduleSlug` is the last part of the URL path
+
+  console.log('Module slug received in API:', moduleSlug);
+
   // Find module by slug
   const foundModule = await prisma.module.findUnique({
-    where: { slug: params.moduleSlug },
+    where: { slug: moduleSlug || "" },
     select: { id: true }, // Only fetch the id
   });
 
@@ -19,7 +23,8 @@ export async function GET(req: Request, { params }: { params: { moduleSlug: stri
     where: { moduleId: foundModule.id }, // Use moduleId
     include: { resources: true }, // Include resources associated with the concept
   });
-  console.log("Concepts from API: ", concepts)
+
+  console.log("Concepts from API: ", concepts);
 
   return NextResponse.json(concepts, {
     headers: {

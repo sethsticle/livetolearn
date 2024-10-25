@@ -246,64 +246,35 @@ export async function DeleteModuleAction({ moduleId }: { moduleId: string }) {
   return { status: 'success' };
 }
 
-export async function AddResourceAction(_prevState: unknown, formData: FormData) {
-  console.log("Server action ADDRESOURCE ACTION called");
-  const user = await requireUser(); // Ensures user authentication
 
-  const submission = parseWithZod(formData, {
-    schema: resourceSchema, // Validate with Zod schema
-  });
+export async function AddResourceAction(_prevState: unknown, formData: FormData) {
+  const submission = parseWithZod(formData, { schema: resourceSchema });
 
   if (submission.status !== 'success') {
-    return submission.reply();
+    return submission.reply(); // Return validation errors
   }
 
-  const moduleSlug = formData.get('moduleSlug') as string;
-  const conceptId = formData.get('conceptId') as string;
-  const courseId = formData.get('courseId') as string;
+  const { moduleSlug, courseId, conceptId } = Object.fromEntries(formData);
 
-  console.log("ModuleSlug from server action: ", moduleSlug);
-  console.log("ConceptId from server action: ", conceptId);
-  console.log("CourseId from server action: ", courseId);
-
-  // Ensure moduleSlug and conceptId are present
-  if (!moduleSlug ) {
-    throw new Error("Missing moduleSlug or conceptId");
-  }
+  const user = await requireUser();
 
   const moduleExists = await prisma.module.findUnique({
-    where: { slug: moduleSlug },
-    select: { id: true }, // Only fetch the id
+    where: { slug: moduleSlug as string },
+    select: { id: true },
   });
 
-  if(moduleExists){
-    console.log("ModuleExists from server action: ", moduleExists);
-    console.log("ModuleExistsID from SERVER action: ", moduleExists.id);
-  }
   if (!moduleExists) {
     throw new Error("Module with the given slug does not exist.");
-    console.log("Module with the given slug does not exist.");
   }
 
-  // const conceptExists = await prisma.concept.findUnique({
-  //   where: { id: conceptId },
-  // });
-
-  // if (!conceptExists) {
-  //   throw new Error("Concept with the given ID does not exist.");
-  // }
-
-  // Check if the resource already exists by its slug (assuming slug = link)
   const existingResource = await prisma.resource.findUnique({
     where: { slug: submission.value.link },
   });
 
   if (existingResource) {
-    return submission.reply(); // If resource already exists, stop the process
+    return submission.reply(); // Resource exists, stop process
   }
-  
 
-  // Create the resource, linking it to both the module and the concept
   await prisma.resource.create({
     data: {
       name: submission.value.name,
@@ -312,12 +283,13 @@ export async function AddResourceAction(_prevState: unknown, formData: FormData)
       type: submission.value.type,
       moduleId: moduleExists.id,
       userId: user.id,
-      conceptId: conceptId || null, // Store the selected conceptId
+      conceptId: conceptId ? String(conceptId) : null,
     },
   });
-  
+
   return redirect(`/dashboard/courses/${courseId}/module/${moduleSlug}`);
 }
+
 
 
 export async function AddConceptAction(_prevState: unknown, formData: FormData) {
@@ -539,6 +511,29 @@ export async function DeleteSiteAction(formData: FormData) {
     return redirect(`/dashboard/sites`)
  }
 
+ interface FetchConceptsInput {
+  moduleSlug: string;
+}
+
+export async function fetchConcepts({ moduleSlug }: FetchConceptsInput) {
+  // Fetch the module by slug
+  const foundModule = await prisma.module.findUnique({
+    where: { slug: moduleSlug },
+    select: { id: true },
+  });
+
+  if (!foundModule) {
+    throw new Error("Module not found");
+  }
+
+  // Fetch concepts related to the module
+  const concepts = await prisma.concept.findMany({
+    where: { moduleId: foundModule.id },
+    include: { resources: true },
+  });
+
+  return concepts;
+}
 
  //this is a function that will create a subscription for the user
  //currently set up for stripe api...will need to change to Yoco
