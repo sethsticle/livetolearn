@@ -139,6 +139,9 @@ model Module {
 
   // Relation to Concepts (Many Concepts <-> 1 Module)
   concept Concept[] @relation("ModuleConcept")
+
+  // Relation to Quiz (Many Quizzes <-> 1 Module)
+  quiz Quiz[] @relation("ModuleQuiz")
 }
 
 model Resource {
@@ -182,13 +185,39 @@ model ResourceVote {
   userId     String
   voteType   String // Use enum if you prefer type safety, e.g., "UPVOTE" | "DOWNVOTE"
 
-  resource   Resource @relation(fields: [resourceId], references: [id], name: "ResourceVote")
+  resource   Resource @relation(fields: [resourceId], references: [id],onDelete: Cascade, name: "ResourceVote")
   user       User     @relation(fields: [userId], references: [id], name: "UserVote")
 
   @@unique([resourceId, userId]) // Ensures one vote per user per resource
 }
 
+model Quiz {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
+  // Relation to Module (Many Modules <-> 1 Quiz)
+  module   Module? @relation(fields: [moduleSlug], references: [slug], onDelete: Cascade, name: "ModuleQuiz")
+  moduleSlug String  @unique // Foreign Key for Module
+
+  // Relation to Question (Many Questions <-> 1 Quiz)
+  question Question[] @relation("QuizQuestion")
+}
+
+model Question {
+  id          String   @id @default(uuid())
+  questionText String
+  options     String[]
+  correctAnswer Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relation to Quiz (Many Quizzes <-> 1 Question)
+  quiz         Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade, name: "QuizQuestion")
+  quizId String // Foreign Key for Quiz
+}
 //relations: 
 //each site can have multiple posts
 //each post can have ONE site

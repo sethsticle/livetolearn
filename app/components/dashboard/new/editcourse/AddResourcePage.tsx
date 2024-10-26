@@ -28,7 +28,7 @@ export default function AddResourcePage({ params, concepts }: { params: { course
     <div className="flex flex-col w-full h-full">
       <div><BackButton path={`/dashboard/courses/${params.courseId}/module/${params.slug}`} text="Cancel" /></div>
       <div className="flex flex-col flex-1 items-center justify-center">
-        <Card className="border border-red-500 w-full">
+        <Card className=" w-full">
           <CardHeader className="text-center">
             <CardTitle>Add New Resource</CardTitle>
           </CardHeader>

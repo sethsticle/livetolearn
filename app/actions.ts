@@ -5,6 +5,7 @@ import { conceptSchema, CourseCreationSchema, CourseEditSchema, ModuleCreationSc
 import prisma from "./utils/db"; //CRUCIAL ERROR DONT FORGET
 import { requireUser } from "./utils/requireUser";
 import { requireAdmin } from "./utils/requireAdmin";
+import { Question, Quiz } from "./utils/types";
 
 export async function CreateSiteAction(_prevState: unknown, formData: FormData) {
     const user = await requireUser();
@@ -191,48 +192,58 @@ if (!formData.get('moduleSlug')) {
 
 return redirect(`/dashboard/courses/${courseId}/module/${formData.get('moduleSlug')}`);
 }
-
 export async function AddModuleAction(_prevState: unknown, formData: FormData) {
   // Validate the module form
- const submission = await parseWithZod(formData, {
-  schema: ModuleCreationSchema({
-    async isSubdirectoryUnique() {
-      const existingSubDirectory = await prisma.module.findUnique({
-        where: {
-          slug: formData.get("slug") as string,
-        },
-      });
-      return !existingSubDirectory;  // Return true if unique, false otherwise
+  const submission = await parseWithZod(formData, {
+    schema: ModuleCreationSchema({
+      async isSubdirectoryUnique() {
+        const existingSubDirectory = await prisma.module.findUnique({
+          where: {
+            slug: formData.get("slug") as string,
+          },
+        });
+        return !existingSubDirectory;  // Return true if unique, false otherwise
+      },
+    }),
+    async: true,
+  });
+
+  const courseId = formData.get("courseId") as string;
+  if (!courseId) {
+    throw new Error("Course ID is missing.");
+  }
+
+  if (submission.status !== "success") {
+    return submission.reply();
+  }
+
+  // Create the module
+  const foundModule = await prisma.module.create({
+    data: {
+      name: submission.value.name,
+      description: submission.value.description,
+      courseId: courseId,
+      slug: submission.value.slug,
+      year: submission.value.year
     },
-  }),
-  async: true,
-});
+  });
 
-const courseId = formData.get("courseId") as string;
-if (!courseId) {
-  throw new Error("Course ID is missing.");
+
+  // Create a default quiz for the module
+
+  const quiz = await prisma.quiz.create({
+    data: {
+      title: `Quiz for ${foundModule.name}`,
+      description: `Default quiz for module ${foundModule.name}`,
+      moduleSlug: foundModule.slug,
+    },
+  });
+
+  console.log("Quiz created with ID:", quiz.id); // Confirm Quiz creation
+
+  return redirect(`/dashboard/new/editcourse/${courseId}/`);
 }
 
-
-if (submission.status !== "success") {
-  return submission.reply();
-}
-
- await prisma.module.create({
-  data: {
-    name: submission.value.name,
-    description: submission.value.description,
-    courseId: courseId,
-    slug: submission.value.slug,
-    year: submission.value.year
-  },
-});
-
-
-//console.log('Response:', response);
-return redirect(`/dashboard/new/editcourse/${courseId}/`);
-
-}
 
 //edit module action
 
@@ -533,6 +544,64 @@ export async function fetchConcepts({ moduleSlug }: FetchConceptsInput) {
   });
 
   return concepts;
+}
+
+export async function fetchQuizData(slug: string): Promise<Quiz | null> {
+  const quiz = await prisma.quiz.findFirst({
+    where: {moduleSlug: slug },
+    include: { question: true },
+  });
+
+  if (!quiz) return null;
+
+  return {
+    id: quiz.id,
+    title: quiz.title,
+    description: quiz.description || "",
+    questions: quiz.question.map((q) => ({
+      id: q.id,
+      questionText: q.questionText,
+      options: q.options,
+      correctAnswer: q.correctAnswer,
+    })),
+  };
+}
+export async function createQuestion(moduleSlug: string, questionData: Omit<Question, 'id'>) {
+  // Find the quiz associated with the moduleSlug
+  const quiz = await prisma.quiz.findUnique({
+    where: { moduleSlug },
+  });
+
+  if (!quiz) {
+    throw new Error(`Quiz for module with slug ${moduleSlug} does not exist.`);
+  }
+
+  // Now use the found quiz.id to create the question
+  return prisma.question.create({
+    data: {
+      quizId: quiz.id,
+      questionText: questionData.questionText,
+      options: questionData.options,
+      correctAnswer: questionData.correctAnswer,
+    },
+  });
+}
+
+export async function fetchQuestionsForQuiz(slug: string) {
+  const quiz = await prisma.quiz.findUnique({
+    where: { moduleSlug: slug },
+    include: { question: true },
+  });
+
+  return quiz?.question || [];
+}
+
+export async function deleteQuestion(questionId: string) {
+  return prisma.question.delete({
+    where: {
+      id: questionId,
+    },
+  });
 }
 
  //this is a function that will create a subscription for the user

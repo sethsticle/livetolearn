@@ -34,7 +34,7 @@ export default function NavbarMenu() {
                         </span>
                     </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
+                {/* <DropdownMenuItem asChild>
                     <Link href="/dashboard/sites">
                         <span className={pathname === '/dashboard/sites' ? 'text-primary/40' : 'text-muted-foreground'}>
                             Sites
@@ -47,7 +47,7 @@ export default function NavbarMenu() {
                             Pricing
                         </span>
                     </Link>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 
             </DropdownMenuContent>
         </DropdownMenu>

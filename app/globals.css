@@ -114,3 +114,22 @@ h1, h2, h3, p {
     background-position: 200% 0;
   }
 }
+
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .rotate-y-0 {
+    transform: rotateY(0deg);
+  }
+
+  .rotate-y-90 {
+    transform: rotateY(90deg);
+  }
+
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+}

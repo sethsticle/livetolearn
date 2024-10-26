@@ -66,3 +66,23 @@ export interface ModuleType {
     downVotes: number;
     userVote: "upvote" | "downvote" | null;
   }
+
+  export interface Question {
+    id: string;
+    questionText: string;
+    options: string[];
+    correctAnswer: number;
+  }
+  
+  export interface Quiz {
+    id: string;
+    title: string;
+    description?: string;
+    questions: Question[];
+  }
+
+  export interface QuizState {
+    currentQuestionIndex: number;
+    score: number;
+    answers: { questionId: string; correct: boolean; userAnswer: number }[];
+  }
